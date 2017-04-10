@@ -1,0 +1,66 @@
+<div class ="ipUrl">
+    {{#if block.data.details.ipUrl}}
+    <a href="{{block.data.details.ipUrl}}"> Search Scout Prime </a><i class="btb bt-external-link integration-text-bold-color"></i>
+    {{/if}}
+</div>
+
+<div class="ipOwner">
+{{#if block.data.details.owner}}
+<p>
+    <i class="fa fa-fw fa-users integration-text-bold-color" ></i><span> Owner: </span>
+
+</p>
+
+<ul>
+    {{#each block.data.details.owner as |item|}}
+    <li>{{item}}</li>
+    {{/each}}
+</ul>
+{{/if}}
+
+    {{#if block.isCached}}
+    <i>(Entity Is Cached)</i>
+    {{/if}}
+</div>
+
+<div class="ipTime">
+{{#if block.data.details.time}}
+    <i class="fa fa-fw fa-clock-o integration-text-bold-color" ></i><span class="time1"> Last Seen:  </span>
+    {{moment-time block.data.details.time}}
+{{/if}}
+</div>
+
+
+
+
+<div class ="cidrUrl">
+{{#if block.data.details.cidrUrl}}
+<a href="{{block.data.details.cidrUrl}}"> Search Scout Prime </a><i class="btb bt-external-link integration-text-bold-color"></i>
+{{/if}}
+</div>
+
+
+<div class="cidrOwner">
+{{#if block.data.details.cidrOwner}}
+<p>
+    <i class="fa fa-fw fa-users integration-text-bold-color" ></i><span> Owner: </span>
+
+</p>
+
+<ul>
+    {{#each block.data.details.cidrOwner as |item|}}
+    <li>{{item}}</li>
+    {{/each}}
+</ul>
+{{/if}}
+
+</div>
+
+<div class="cidrTime">
+{{#if block.data.details.cTime}}
+    <i class="fa fa-fw fa-clock-o integration-text-bold-color" ></i><span class="time"> Last Seen:  </span>
+    {{moment-time block.data.details.cTime}}
+{{/if}}
+</div>
+
+
