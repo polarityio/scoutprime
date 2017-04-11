@@ -1,10 +1,10 @@
 'use strict';
 
-var request = require('request');
-var _ = require('lodash');
-var async = require('async');
-var ip = require('ip');
-var log = null;
+let request = require('request');
+let _ = require('lodash');
+let async = require('async');
+let ip = require('ip');
+let log = null;
 
 
 function startup(logger) {
@@ -16,7 +16,7 @@ let cidrIcon = '<i class="fa fa-fw fa-cogs integration-text-bold-color" ></i>';
 let fqdnIcon = '<i class="fa fa-fw fa-globe integration-text-bold-color" ></i>';
 
 function doLookup(entities, options, cb) {
-    let entitiesWithNoData = [];
+
     let lookupResults = [];
 
     let parseTicOption = parseInt(options.tic);
@@ -24,7 +24,6 @@ function doLookup(entities, options, cb) {
 
     createSession(options, function(err, session_key){
         if(err){
-            log.error(err, "Error: %d", err.detail);
             cb(err);
             destroySession(options, session_key);
             return;
@@ -220,6 +219,7 @@ function _lookupEntity(entityObj, options, session_key, cb) {
         // check for an error
         if (err) {
             cb(err);
+            log.error({err:err}, "Logging errors");
             return;
         }
 
@@ -229,8 +229,10 @@ function _lookupEntity(entityObj, options, session_key, cb) {
         }
 
         if(body.data == null){
-            log.trace({body:body}, "Printing data error:");
-            return;
+            cb(null, {
+                entity: entityObj.value,
+                data: null
+            });
         }
 
         let owners = body.data[0].n_owner_S;
@@ -302,7 +304,8 @@ function _lookupEntityCidr(entityObj, options, session_key, cb) {
     }, function(err, response, body) {
         // check for an error
         if (err) {
-            log.trace({err: err}, "Tracing any potential non fatal errors:");
+            cb(err);
+            log.error({err: err}, "Tracing any potential non fatal errors:");
             return;
         }
 
@@ -313,8 +316,10 @@ function _lookupEntityCidr(entityObj, options, session_key, cb) {
 
 
         if(body.data == null){
-            log.trace({body:body}, "Printing data error:");
-            return;
+            cb(null, {
+                entity: entityObj.value,
+                data: null
+            });
         }
 
         log.trace({body: body}, "Printing out Body");
@@ -384,7 +389,8 @@ function _lookupEntityfqdn(entityObj, options, session_key, cb) {
     }, function(err, response, body) {
         // check for an error
         if (err) {
-            log.trace({err: err}, "Tracing any potential non fatal errors:");
+            cb(err);
+            log.error({err:err}, "Logging errors");
             return;
         }
 
@@ -394,8 +400,10 @@ function _lookupEntityfqdn(entityObj, options, session_key, cb) {
         }
 
         if(body.data == null){
-            log.trace({body:body}, "Printing data error:");
-            return;
+            cb(null, {
+                entity: entityObj.value,
+                data: null
+            });
         }
 
         log.debug({body: body}, "Printing out Body");
