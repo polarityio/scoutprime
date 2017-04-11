@@ -20,7 +20,7 @@ function doLookup(entities, options, cb) {
     let lookupResults = [];
 
     let parseTicOption = parseInt(options.tic);
-    log.debug({parsetic: parseTicOption}, "parse tic options");
+
 
     createSession(options, function(err, session_key){
         if(err){
@@ -41,7 +41,7 @@ function doLookup(entities, options, cb) {
                         next(null);
                     }
                     else {
-                        lookupResults.push(result); log.debug({results: result}, "Results of the Query");
+                        lookupResults.push(result); log.trace({results: result}, "Results of the Query");
                         next(null);
                     }
                 });
@@ -129,7 +129,7 @@ var createSession = function(options, cb){
     if (options.username.length > 0){
         uri += '/api/auth/login';
     }
-    log.debug({uri:uri}, "What does the URI look like");
+    log.trace({uri:uri}, "What does the URI look like");
 
     let postData = { "params" : { "username": options.username, "password": options.password}};
 
@@ -198,8 +198,6 @@ let tScore = " TIC Score ";
 function _lookupEntity(entityObj, options, session_key, cb) {
     let uri = options.url;
 
-    log.debug({uri:uri}, "URI looks like in lookupEntity");
-    log.debug( "session_key looks like in lookupEntity: %s", session_key);
 
     if (options.username.length > 0) {
         uri += '/api/search';
@@ -236,9 +234,9 @@ function _lookupEntity(entityObj, options, session_key, cb) {
         }
 
         let owners = body.data[0].n_owner_S;
-        log.debug({body: body}, "Printing out Body");
+        log.trace({body: body}, "Printing out Body");
 
-        log.debug({owner: owners}, "Printing out Owners");
+
 
         var namesOwners = _.reduce(owners, function (reduced, rows) {
             if (!rows) {
@@ -281,8 +279,6 @@ let cidrScore = " TIC Score ";
 function _lookupEntityCidr(entityObj, options, session_key, cb) {
     let uri = options.url;
 
-    log.debug({uri:uri}, "URI looks like in lookupEntity");
-    log.debug( "session_key looks like in lookupEntity: %s", session_key);
 
     if (options.username.length > 0) {
         uri += '/api/search';
@@ -321,7 +317,7 @@ function _lookupEntityCidr(entityObj, options, session_key, cb) {
             return;
         }
 
-        log.debug({body: body}, "Printing out Body");
+        log.trace({body: body}, "Printing out Body");
 
         let owners = body.data[0].n_owner_S;
 
@@ -365,15 +361,13 @@ function _lookupEntityfqdn(entityObj, options, session_key, cb) {
     let uri = options.url;
 
 
-    log.debug( "session_key looks like in lookupEntity: %s", session_key);
-
     if (options.username.length > 0) {
         uri += '/api/search';
     }
 
     let bodyData = {"e_type_k": "n_fqdn", "query": entityObj.value, "limit": 10};
 
-    log.debug({bodyData: bodyData}, "URI looks like in lookupEntity");
+    log.trace({bodyData: bodyData}, "URI looks like in lookupEntity");
 
     let scoutUrl = options.url;
 
