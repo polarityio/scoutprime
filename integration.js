@@ -3,6 +3,7 @@
 var request = require('request');
 var _ = require('lodash');
 var async = require('async');
+var ip = require('ip');
 var log = null;
 
 
@@ -12,7 +13,7 @@ function startup(logger) {
 
 let ipIcon = '<i class="btb bt-desktop integration-text-bold-color"></i>';
 let cidrIcon = '<i class="fa fa-fw fa-cogs integration-text-bold-color" ></i>';
-
+let fqdnIcon = '<i class="fa fa-fw fa-globe integration-text-bold-color" ></i>';
 
 function doLookup(entities, options, cb) {
     let entitiesWithNoData = [];
@@ -31,6 +32,7 @@ function doLookup(entities, options, cb) {
 
 
         async.each(entities, function (entityObj, next) {
+            log.debug({entity: entityObj.value}, "logging the value to validate node ip");
             if (entityObj.isIPv4) {
                 _lookupEntity(entityObj, options, session_key, function (err, result) {
                     if (err) {
@@ -43,28 +45,27 @@ function doLookup(entities, options, cb) {
                         next(null);
                     }
                 });
-            } else if (entityObj.types.indexOf('custom.cidr') > 0) {
+            } else if (entityObj.types.indexOf('custom.cidr') >= 0 && options.lookupCidr) {
                 _lookupEntityCidr(entityObj, options, session_key, function (err, result) {
                     if (err) {
                         next(err);
-                    } else if (result.data.details.cidr_score === null || (parseInt(result.data.details.cidr_score) <= parseTicOption)) {
+                    } else if (result.data.details.cidr_score === null || (parseInt(result.data.details.cidr_score) <= parseTicOption) && (ip.cidr(entityObj.value) != null)) {
                         next(null);
                     }
                     else {
-                        lookupResults.push(result); log.debug({results: result}, "Results of the Query");
+                        lookupResults.push(result);log.trace({results: result}, "Results of the Query");
                         next(null);
                     }
                 });
-            } else if (entityObj.types.indexOf('custom.fqdn') > 0) {
+            } else if (entityObj.isDomain && options.lookupFqdn) {
                 _lookupEntityfqdn(entityObj, options, session_key, function (err, result) {
                     if (err) {
                         next(err);
-                    } //else if (result.data.details.cidr_score === null || (parseInt(result.data.details.cidr_score) <= parseTicOption)) {
-                        //next(null);
-                    //}
+                    } else if (result.data.details.fqdn_score === null || (parseInt(result.data.details.fqdn_score) <= parseTicOption)) {
+                        next(null);
+                    }
                     else {
-                        lookupResults.push(result);
-                        log.debug({results: result}, "Results of the Query");
+                        lookupResults.push(result); log.trace({results: result}, "Results of the Query");
                         next(null);
                     }
                 });
@@ -192,7 +193,7 @@ var destroySession = function(options, session_key, cb){
 };
 
 
-let tScore = "Tic Score ";
+let tScore = " TIC Score ";
 
 function _lookupEntity(entityObj, options, session_key, cb) {
     let uri = options.url;
@@ -226,6 +227,11 @@ function _lookupEntity(entityObj, options, session_key, cb) {
 
         if (response.statusCode !== 200) {
             cb(body);
+            return;
+        }
+
+        if(body.data == null){
+            log.trace({body:body}, "Printing data error:");
             return;
         }
 
@@ -270,7 +276,7 @@ function _lookupEntity(entityObj, options, session_key, cb) {
 }
 
 
-let cidrScore = "CIDR Tic Score ";
+let cidrScore = " TIC Score ";
 
 function _lookupEntityCidr(entityObj, options, session_key, cb) {
     let uri = options.url;
@@ -285,6 +291,7 @@ function _lookupEntityCidr(entityObj, options, session_key, cb) {
     let bodyData = {"e_type_k": "n_cidr", "query": entityObj.value, "limit": 10};
 
     let scoutUrl = options.url;
+
 
 
     request({
@@ -308,6 +315,12 @@ function _lookupEntityCidr(entityObj, options, session_key, cb) {
             return;
         }
 
+
+        if(body.data == null){
+            log.trace({body:body}, "Printing data error:");
+            return;
+        }
+
         log.debug({body: body}, "Printing out Body");
 
         let owners = body.data[0].n_owner_S;
@@ -323,7 +336,6 @@ function _lookupEntityCidr(entityObj, options, session_key, cb) {
             owners: []
         });
 
-
         // The lookup results returned is an array of lookup objects with the following format
         cb(null, {
             // Required: This is the entity object passed into the integration doLookup method
@@ -333,7 +345,7 @@ function _lookupEntityCidr(entityObj, options, session_key, cb) {
                 // Required: this is the string value that is displayed in the template
                 entity_name: entityObj.value,
                 // Required: These are the tags that are displayed in your template
-                summary: [cidrIcon + " " +  cidrScore + body.data[0].tic_score_i],
+                summary: [cidrIcon + " " +  cidrScore + " " + body.data[0].tic_score_i],
                 // Data that you want to pass back to the notification window details block
                 details: {
                     cidr_score: body.data[0].tic_score_i,
@@ -347,6 +359,7 @@ function _lookupEntityCidr(entityObj, options, session_key, cb) {
     });
 }
 
+let fqdnScore = " TIC Score: ";
 
 function _lookupEntityfqdn(entityObj, options, session_key, cb) {
     let uri = options.url;
@@ -386,9 +399,14 @@ function _lookupEntityfqdn(entityObj, options, session_key, cb) {
             return;
         }
 
+        if(body.data == null){
+            log.trace({body:body}, "Printing data error:");
+            return;
+        }
+
         log.debug({body: body}, "Printing out Body");
 
-        /*let owners = body.data[0].n_owner_S;
+        let owners = body.data[0].n_owner_S;
 
         let nameOwners = _.reduce(owners, function (reduced, rows) {
             if (!rows) {
@@ -399,25 +417,29 @@ function _lookupEntityfqdn(entityObj, options, session_key, cb) {
             return reduced;
         }, {
             owners: []
-        });*/
+        });
 
 
         // The lookup results returned is an array of lookup objects with the following format
         cb(null, {
-            // Required: This is the entity object passed into the integration doLookup method
-            entity: entityObj,
-            // Required: An object containing everything you want passed to the template
-            data: {
-                // Required: this is the string value that is displayed in the template
-                entity_name: entityObj.value,
-                // Required: These are the tags that are displayed in your template
-                summary: ["Test"],
-                // Data that you want to pass back to the notification window details block
-                details: {
-                    body: body
+                // Required: This is the entity object passed into the integration doLookup method
+                entity: entityObj,
+                // Required: An object containing everything you want passed to the template
+                data: {
+                    // Required: this is the string value that is displayed in the template
+                    entity_name: entityObj.value,
+                    // Required: These are the tags that are displayed in your template
+                    summary: [fqdnIcon + " " + fqdnScore + body.data[0].tic_score_i],
+                    // Data that you want to pass back to the notification window details block
+                    details: {
+                        fqdn_score: body.data[0].tic_score_i,
+                        fqdn_s: body.data[0].n_cidr_s,
+                        fqdnOwner: nameOwners.owners,
+                        fqdnTime: body.data[0]['tic_calculated-at_t'],
+                        fqdnUrl: scoutUrl
+                    }
                 }
-            }
-        });
+            });
     });
 }
 

@@ -2,19 +2,13 @@ module.exports = {
     "name": "ScoutPrime",
     "acronym": "SP",
     "logging": {level: 'debug'},
-    "entityTypes": ['IPv4'],
+    "entityTypes": ['IPv4', 'domain'],
     "customTypes":[
         {
             "key": 'cidr',
-            "regex": /((25[0-5]|2[0-4]\d|1\d\d|[1-9]?\d)\.){3}(25[0-5]|2[0-4]\d|1\d\d|[1-9]?\d)\/(3[0-2]|[1-2]?[0-9])/
-            //"isCaseSensitive": true,
-            //"isGlobal": true
-        },
-        {
-            "key": 'fqdn',
-            "regex": /((?=[a-z0-9-]{1,63}\.)(xn--)?[a-z0-9]+(-[a-z0-9]+)*\.)+[a-z]{2,63}/
-            //"isCaseSensitive": false,
-            //"isGlobal": true
+            "regex": /((25[0-5]|2[0-4]\d|1\d\d|[1-9]?\d)\.){3}(25[0-5]|2[0-4]\d|1\d\d|[1-9]?\d)\/(3[0-2]|[1-2]?[0-9])/,
+            "isCaseSensitive": true,
+            "isGlobal": true
         }
     ],
     "styles": [
@@ -58,10 +52,28 @@ module.exports = {
         },
         {
             "key": "tic",
-            "name": "Minimum Tic Score",
-            "description": "Minimum Tic Score to be notified on",
+            "name": "Minimum TIC Score",
+            "description": "Minimum TIC Score to be notified on, values range from 0-100",
             "default": "0",
             "type": "text",
+            "userCanEdit": true,
+            "adminOnly": false
+        },
+        {
+            "key": "lookupCidr",
+            "name": "Lookup CIDRs",
+            "description": "If checked, the integration will lookup CIDRs in Scout Prime",
+            "default": true,
+            "type": "boolean",
+            "userCanEdit": true,
+            "adminOnly": false
+        },
+        {
+            "key": "lookupFqdn",
+            "name": "Lookup Fully Qualified Domain Names",
+            "description": "If checked, the integration will lookup FQDNs in Scout Prime",
+            "default": true,
+            "type": "boolean",
             "userCanEdit": true,
             "adminOnly": false
         }

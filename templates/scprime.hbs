@@ -64,3 +64,34 @@
 </div>
 
 
+<div class ="fqdnUrl">
+{{#if block.data.details.fqdnUrl}}
+<a href="{{block.data.details.fqdnUrl}}"> Search Scout Prime </a><i class="btb bt-external-link integration-text-bold-color"></i>
+{{/if}}
+</div>
+
+
+<div class="fqdnOwner">
+{{#if block.data.details.fqdnOwner}}
+<p>
+    <i class="fa fa-fw fa-users integration-text-bold-color" ></i><span> Owner: </span>
+
+</p>
+
+<ul>
+    {{#each block.data.details.fqdnOwner as |item|}}
+    <li>{{item}}</li>
+    {{/each}}
+</ul>
+{{/if}}
+
+</div>
+
+<div class="fqdnTime">
+    {{#if block.data.details.fqdnTime}}
+        <i class="fa fa-fw fa-clock-o integration-text-bold-color" ></i><span class="time"> Last Seen:  </span>
+        {{moment-time block.data.details.fqdnTime}}
+    {{/if}}
+</div>
+
+
