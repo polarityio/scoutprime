@@ -419,7 +419,7 @@ function _lookupEntityfqdn(entityObj, options, session_key, cb) {
             return;
         }
 
-        log.debug({body: body}, "Printing out Body");
+        log.trace({body: body}, "Printing out Body");
 
         let owners = body.data[0].n_owner_S;
 
