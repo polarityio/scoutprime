@@ -60,6 +60,15 @@ module.exports = {
             "adminOnly": false
         },
         {
+            "key": "lookupIp",
+            "name": "Lookup IPv4 Addresses",
+            "description": "If checked, the integration will lookup IPv4 addresses in Scout Prime",
+            "default": true,
+            "type": "boolean",
+            "userCanEdit": true,
+            "adminOnly": false
+        },
+        {
             "key": "lookupCidr",
             "name": "Lookup CIDRs",
             "description": "If checked, the integration will lookup CIDRs in Scout Prime",

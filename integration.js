@@ -20,7 +20,6 @@ function doLookup(entities, options, cb) {
 
     let parseTicOption = parseInt(options.tic, 10);
 
-
     createSession(options, function (err, session_key) {
         if (err) {
             cb(err);
@@ -30,7 +29,7 @@ function doLookup(entities, options, cb) {
 
         async.each(entities, function (entityObj, next) {
             log.debug({entity: entityObj.value}, "logging the value to validate node ip");
-            if (entityObj.isIPv4) {
+            if (entityObj.isIPv4 && options.lookupIp) {
                 _lookupEntity(entityObj, options, session_key, function (err, result) {
                     if(err){
                         next(err);
