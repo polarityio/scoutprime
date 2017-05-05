@@ -18,7 +18,7 @@ function doLookup(entities, options, cb) {
 
     let lookupResults = [];
 
-    let parseTicOption = parseInt(options.tic);
+    let parseTicOption = parseInt(options.tic, 10);
 
 
     createSession(options, function (err, session_key) {
@@ -96,7 +96,7 @@ function _doReturnResult(property, result, parseTicOption){
         return false;
     }
 
-    if(parseInt(result.data.details[property]) < parseTicOption){
+    if(parseInt(result.data.details[property], 10) < parseTicOption){
         return false;
     }
 
