@@ -260,8 +260,6 @@ function _lookupEntity(entityObj, options, session_key, cb) {
             entity: entityObj,
             // Required: An object containing everything you want passed to the template
             data: {
-                // Required: this is the string value that is displayed in the template
-                entity_name: entityObj.value,
                 // Required: These are the tags that are displayed in your template
                 summary: [ipIcon + " " + tScore + body.data[0].tic_score_i],
                 // Data that you want to pass back to the notification window details block
@@ -347,8 +345,6 @@ function _lookupEntityCidr(entityObj, options, session_key, cb) {
             entity: entityObj,
             // Required: An object containing everything you want passed to the template
             data: {
-                // Required: this is the string value that is displayed in the template
-                entity_name: entityObj.value,
                 // Required: These are the tags that are displayed in your template
                 summary: [cidrIcon + " " +  cidrScore + " " + body.data[0].tic_score_i],
                 // Data that you want to pass back to the notification window details block
@@ -436,18 +432,18 @@ function _lookupEntityfqdn(entityObj, options, session_key, cb) {
                 data: {
                     // Required: this is the string value that is displayed in the template
                     entity_name: entityObj.value,
-                    // Required: These are the tags that are displayed in your template
-                    summary: [fqdnIcon + " " + fqdnScore + body.data[0].tic_score_i],
-                    // Data that you want to pass back to the notification window details block
-                    details: {
-                        fqdn_score: body.data[0].tic_score_i,
-                        fqdn_s: body.data[0].n_cidr_s,
-                        fqdnOwner: nameOwners.owners,
-                        fqdnTime: body.data[0]['tic_calculated-at_t'],
-                        fqdnUrl: scoutUrl
-                    }
+                // Required: These are the tags that are displayed in your template
+                summary: [fqdnIcon + " " + fqdnScore + body.data[0].tic_score_i],
+                // Data that you want to pass back to the notification window details block
+                details: {
+                    fqdn_score: body.data[0].tic_score_i,
+                    fqdn_s: body.data[0].n_cidr_s,
+                    fqdnOwner: nameOwners.owners,
+                    fqdnTime: body.data[0]['tic_calculated-at_t'],
+                    fqdnUrl: scoutUrl
                 }
-            });
+            }
+        });
     });
 }
 
