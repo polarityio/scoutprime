@@ -22,8 +22,8 @@ function doLookup(entities, options, cb) {
     let parseTicOption = parseInt(options.tic);
 
 
-    createSession(options, function(err, session_key){
-        if(err){
+    createSession(options, function (err, session_key) {
+        if (err) {
             cb(err);
             destroySession(options, session_key);
             return;
@@ -77,7 +77,6 @@ function doLookup(entities, options, cb) {
             destroySession(options, session_key);
         });
     });
-
 }
 
 function _isValidCidr(entityObj){
@@ -132,15 +131,15 @@ var _createJsonErrorObject = function (msg, pointer, httpCode, code, title, meta
     return error;
 };
 
-var createSession = function(options, cb){
+var createSession = function (options, cb) {
     let uri = options.url;
 
-    if (options.username.length > 0){
+    if (options.username.length > 0) {
         uri += '/api/auth/login';
     }
-    log.trace({uri:uri}, "What does the URI look like");
+    log.trace({uri: uri}, "What does the URI look like");
 
-    let postData = { "params" : { "username": options.username, "password": options.password}};
+    let postData = {"params": {"username": options.username, "password": options.password}};
 
 
     request({
@@ -152,7 +151,7 @@ var createSession = function(options, cb){
         },
         body: postData,
         json: true
-    }, function(err, response, body){
+    }, function (err, response, body) {
         if (err) {
             cb(err);
             return;
@@ -163,7 +162,7 @@ var createSession = function(options, cb){
             return;
         }
 
-        if(response.statusCode === 401){
+        if (response.statusCode === 401) {
             cb(_createJsonErrorPayload("Invalid Credentials, please check your User Name and Password", null, '401', '2A', 'Invalid Credentials', {
                 err: err
             }));
@@ -174,7 +173,7 @@ var createSession = function(options, cb){
     });
 };
 
-var destroySession = function(options, session_key, cb){
+var destroySession = function (options, session_key, cb) {
 
     var uri = options.url + '/api/auth/login';
 
@@ -185,7 +184,7 @@ var destroySession = function(options, session_key, cb){
             'Accept': 'application/json',
             'x-lg-session': session_key
         }
-    }, function(err, response, body) {
+    }, function (err, response, body) {
         if (err) {
             if (cb) {
                 cb(_createJsonErrorPayload("Session is being Destroyed", body, '401', '2A', 'Session Terminated', {
@@ -225,11 +224,11 @@ function _lookupEntity(entityObj, options, session_key, cb) {
         },
         body: bodyData,
         json: true
-    }, function(err, response, body) {
+    }, function (err, response, body) {
         // check for an error
         if (err) {
             cb(err);
-            log.error({err:err}, "Logging errors");
+            log.error({err: err}, "Logging errors");
             return;
         }
 
@@ -238,7 +237,7 @@ function _lookupEntity(entityObj, options, session_key, cb) {
             return;
         }
 
-        if(body.data == null){
+        if (body.data == null) {
             cb(null, {
                 entity: entityObj.value,
                 data: null
@@ -249,7 +248,6 @@ function _lookupEntity(entityObj, options, session_key, cb) {
 
         let owners = body.data[0].n_owner_S;
         log.trace({body: body}, "Printing out Body");
-
 
 
         var namesOwners = _.reduce(owners, function (reduced, rows) {
@@ -301,7 +299,6 @@ function _lookupEntityCidr(entityObj, options, session_key, cb) {
     let scoutUrl = options.url;
 
 
-
     request({
         uri: uri,
         method: 'POST',
@@ -311,7 +308,7 @@ function _lookupEntityCidr(entityObj, options, session_key, cb) {
         },
         body: bodyData,
         json: true
-    }, function(err, response, body) {
+    }, function (err, response, body) {
         // check for an error
         if (err) {
             cb(err);
@@ -325,7 +322,7 @@ function _lookupEntityCidr(entityObj, options, session_key, cb) {
         }
 
 
-        if(body.data == null){
+        if (body.data == null) {
             cb(null, {
                 entity: entityObj.value,
                 data: null
@@ -356,7 +353,7 @@ function _lookupEntityCidr(entityObj, options, session_key, cb) {
             // Required: An object containing everything you want passed to the template
             data: {
                 // Required: These are the tags that are displayed in your template
-                summary: [cidrIcon + " " +  cidrScore + " " + body.data[0].tic_score_i],
+                summary: [cidrIcon + " " + cidrScore + " " + body.data[0].tic_score_i],
                 // Data that you want to pass back to the notification window details block
                 details: {
                     cidr_score: body.data[0].tic_score_i,
@@ -396,11 +393,11 @@ function _lookupEntityfqdn(entityObj, options, session_key, cb) {
         },
         body: bodyData,
         json: true
-    }, function(err, response, body) {
+    }, function (err, response, body) {
         // check for an error
         if (err) {
             cb(err);
-            log.error({err:err}, "Logging errors");
+            log.error({err: err}, "Logging errors");
             return;
         }
 
@@ -409,7 +406,7 @@ function _lookupEntityfqdn(entityObj, options, session_key, cb) {
             return;
         }
 
-        if(body.data == null){
+        if (body.data == null) {
             cb(null, {
                 entity: entityObj.value,
                 data: null
@@ -436,12 +433,10 @@ function _lookupEntityfqdn(entityObj, options, session_key, cb) {
 
         // The lookup results returned is an array of lookup objects with the following format
         cb(null, {
-                // Required: This is the entity object passed into the integration doLookup method
-                entity: entityObj,
-                // Required: An object containing everything you want passed to the template
-                data: {
-                    // Required: this is the string value that is displayed in the template
-                    entity_name: entityObj.value,
+            // Required: This is the entity object passed into the integration doLookup method
+            entity: entityObj,
+            // Required: An object containing everything you want passed to the template
+            data: {
                 // Required: These are the tags that are displayed in your template
                 summary: [fqdnIcon + " " + fqdnScore + body.data[0].tic_score_i],
                 // Data that you want to pass back to the notification window details block
@@ -459,24 +454,24 @@ function _lookupEntityfqdn(entityObj, options, session_key, cb) {
 
 function validateOptions(userOptions, cb) {
     let errors = [];
-    if(typeof userOptions.url.value !== 'string' ||
-        (typeof userOptions.url.value === 'string' && userOptions.url.value.length === 0)){
+    if (typeof userOptions.url.value !== 'string' ||
+        (typeof userOptions.url.value === 'string' && userOptions.url.value.length === 0)) {
         errors.push({
             key: 'url',
             message: 'You must provide a valid Scout Prime URL'
         })
     }
 
-    if(typeof userOptions.username.value !== 'string' ||
-        (typeof userOptions.username.value === 'string' && userOptions.username.value.length === 0)){
+    if (typeof userOptions.username.value !== 'string' ||
+        (typeof userOptions.username.value === 'string' && userOptions.username.value.length === 0)) {
         errors.push({
             key: 'username',
             message: 'You must provide your Scout Prime User Name'
         })
     }
 
-    if(typeof userOptions.password.value !== 'string' ||
-        (typeof userOptions.password.value === 'string' && userOptions.password.value.length === 0)){
+    if (typeof userOptions.password.value !== 'string' ||
+        (typeof userOptions.password.value === 'string' && userOptions.password.value.length === 0)) {
         errors.push({
             key: 'password',
             message: 'You must provide your Scout Prime Password'
