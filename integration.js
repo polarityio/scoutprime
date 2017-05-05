@@ -42,6 +42,8 @@ function doLookup(entities, options, cb) {
                         lookupResults.push(result);
                         log.trace({results: result}, "Results of the Query");
                     }
+
+                    next(null);
                 });
             } else if (_isValidCidr(entityObj) && options.lookupCidr) {
                 _lookupEntityCidr(entityObj, options, session_key, function (err, result) {
@@ -54,6 +56,8 @@ function doLookup(entities, options, cb) {
                         lookupResults.push(result);
                         log.trace({results: result}, "Results of the Query");
                     }
+
+                    next(null);
                 });
             } else if (entityObj.isDomain && options.lookupFqdn) {
                 _lookupEntityfqdn(entityObj, options, session_key, function (err, result) {
