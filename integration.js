@@ -70,7 +70,6 @@ function doLookup(entities, options, cb) {
                     next(null);
                 });
             } else {
-                lookupResults.push({entity: entityObj, data: null}); //Cache the missed results
                 next(null);
             }
         }, function (err) {
