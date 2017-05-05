@@ -74,18 +74,8 @@ function doLookup(entities, options, cb) {
                 next(null);
             }
         }, function (err) {
-        /**
-         * The callback should return 3 parameters
-         *
-         * @parameter as JSON api formatted error message or a string error message, null if there is no error
-         *      Any error message returned here is displayed in the notification window for the user that experienced
-         *      the error.  This is a good place to return errors related to API authentication or other issues.     *
-         * @parameter entitiesWithNoData an Array of entity objects that had no data for them.  This is used by the caching
-         * system.
-         * @parameter lookupResults An array of lookup result objects
-         */
             cb(err, lookupResults);
-            destroySession(options,session_key);
+            destroySession(options, session_key);
         });
     });
 
