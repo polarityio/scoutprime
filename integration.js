@@ -29,44 +29,45 @@ function doLookup(entities, options, cb) {
             return;
         }
 
-
         async.each(entities, function (entityObj, next) {
             log.debug({entity: entityObj.value}, "logging the value to validate node ip");
             if (entityObj.isIPv4) {
                 _lookupEntity(entityObj, options, session_key, function (err, result) {
-                    if (err) {
+                    if(err){
                         next(err);
-                    } else if(result.data.details.tic_score === null || (parseInt(result.data.details.tic_score) <= parseTicOption)){
-                        next(null);
+                        return;
                     }
-                    else {
-                        lookupResults.push(result); log.trace({results: result}, "Results of the Query");
-                        next(null);
+
+                    if(_doReturnResult('tic_score', result, parseTicOption)){
+                        lookupResults.push(result);
+                        log.trace({results: result}, "Results of the Query");
                     }
                 });
             } else if (_isValidCidr(entityObj) && options.lookupCidr) {
                 _lookupEntityCidr(entityObj, options, session_key, function (err, result) {
-                    if (err) {
+                    if(err){
                         next(err);
-                    } else if (result.data.details.cidr_score === null || (parseInt(result.data.details.cidr_score) <= parseTicOption) && (ip.cidr(entityObj.value) != null)) {
-                        next(null);
+                        return;
                     }
-                    else {
-                        lookupResults.push(result);log.trace({results: result}, "Results of the Query");
-                        next(null);
+
+                    if(_doReturnResult('cidr_score', result, parseTicOption)){
+                        lookupResults.push(result);
+                        log.trace({results: result}, "Results of the Query");
                     }
                 });
             } else if (entityObj.isDomain && options.lookupFqdn) {
                 _lookupEntityfqdn(entityObj, options, session_key, function (err, result) {
-                    if (err) {
+                    if(err){
                         next(err);
-                    } else if (result.data.details.fqdn_score === null || (parseInt(result.data.details.fqdn_score) <= parseTicOption)) {
-                        next(null);
+                        return;
                     }
-                    else {
-                        lookupResults.push(result); log.trace({results: result}, "Results of the Query");
-                        next(null);
+
+                    if(_doReturnResult('fqdn_score', result, parseTicOption)){
+                        lookupResults.push(result);
+                        log.trace({results: result}, "Results of the Query");
                     }
+
+                    next(null);
                 });
             } else {
                 lookupResults.push({entity: entityObj, data: null}); //Cache the missed results
