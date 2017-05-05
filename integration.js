@@ -44,7 +44,7 @@ function doLookup(entities, options, cb) {
                         next(null);
                     }
                 });
-            } else if (entityObj.types.indexOf('custom.cidr') >= 0 && options.lookupCidr) {
+            } else if (_isValidCidr(entityObj) && options.lookupCidr) {
                 _lookupEntityCidr(entityObj, options, session_key, function (err, result) {
                     if (err) {
                         next(err);
