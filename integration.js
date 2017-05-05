@@ -90,6 +90,26 @@ function doLookup(entities, options, cb) {
 
 }
 
+function _isValidCidr(entityObj){
+    if(entityObj.types.indexOf('custom.cidr') >= 0 &&
+        ip.cidr(entityObj.value) !== null){
+        return true;
+    }
+
+    return false;
+}
+
+function _doReturnResult(property, result, parseTicOption){
+    if(result.data === null || result.data.details[property] === null){
+        return false;
+    }
+
+    if(parseInt(result.data.details[property]) < parseTicOption){
+        return false;
+    }
+
+    return true;
+}
 
 // function that takes the ErrorObject and passes the error message to the notification window
 var _createJsonErrorPayload = function (msg, pointer, httpCode, code, title, meta) {
