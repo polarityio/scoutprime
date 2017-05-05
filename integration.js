@@ -6,7 +6,6 @@ let async = require('async');
 let ip = require('ip');
 let log = null;
 
-
 function startup(logger) {
     log = logger;
 }
@@ -40,7 +39,7 @@ function doLookup(entities, options, cb) {
 
                     if(_doReturnResult('tic_score', result, parseTicOption)){
                         lookupResults.push(result);
-                        log.trace({results: result}, "Results of the Query");
+                        log.trace({results: result}, "Results of the IP Query");
                     }
 
                     next(null);
@@ -54,7 +53,7 @@ function doLookup(entities, options, cb) {
 
                     if(_doReturnResult('cidr_score', result, parseTicOption)){
                         lookupResults.push(result);
-                        log.trace({results: result}, "Results of the Query");
+                        log.trace({results: result}, "Results of the CIDR Query");
                     }
 
                     next(null);
@@ -68,7 +67,7 @@ function doLookup(entities, options, cb) {
 
                     if(_doReturnResult('fqdn_score', result, parseTicOption)){
                         lookupResults.push(result);
-                        log.trace({results: result}, "Results of the Query");
+                        log.trace({results: result}, "Results of the FQDN Query");
                     }
 
                     next(null);
