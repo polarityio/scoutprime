@@ -233,6 +233,8 @@ function _lookupEntity(entityObj, options, session_key, cb) {
                 entity: entityObj.value,
                 data: null
             });
+
+            return;
         }
 
         let owners = body.data[0].n_owner_S;
@@ -320,6 +322,8 @@ function _lookupEntityCidr(entityObj, options, session_key, cb) {
                 entity: entityObj.value,
                 data: null
             });
+
+            return;
         }
 
         log.trace({body: body}, "Printing out Body");
@@ -404,6 +408,8 @@ function _lookupEntityfqdn(entityObj, options, session_key, cb) {
                 entity: entityObj.value,
                 data: null
             });
+
+            return;
         }
 
         log.debug({body: body}, "Printing out Body");
