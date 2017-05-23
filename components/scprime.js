@@ -22,7 +22,7 @@ polarity.export = PolarityComponent.extend({
             return this.get('greenThreat');
         }
     }),
-    circumference: Ember.computed('details.ticScore', function(){
+    circumference: Ember.computed('radius', function(){
         return 2 * Math.PI * this.get('radius');
     }),
     strokeOffset: Ember.computed('details.ticScore', function(){
