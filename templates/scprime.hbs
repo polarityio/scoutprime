@@ -4,94 +4,70 @@
     {{/if}}
 </div>
 
-<div class="ipOwner">
-{{#if block.data.details.owner}}
-<p>
-    <i class="fa fa-fw fa-users integration-text-bold-color" ></i><span> Owner: </span>
 
-</p>
-
-<ul>
-    {{#each block.data.details.owner as |item|}}
-    <li>{{item}}</li>
-    {{/each}}
-</ul>
-{{/if}}
-
-    {{#if block.isCached}}
-    <i>(Entity Is Cached)</i>
-    {{/if}}
-</div>
-
-<div class="ipTime">
-{{#if block.data.details.time}}
-    <i class="fa fa-fw fa-clock-o integration-text-bold-color" ></i><span class="time1"> Last Seen:  </span>
-    {{moment-time block.data.details.time}}
-{{/if}}
+<div class="tic-gauge-container">
+<svg x="0" y="0" width="100%" height="60" viewBox="0 0 50 60">
+    <g transform="translate(30,30)">
+        <g>
+            <circle r="25" stroke="#eee" transform="rotate(-90)" fill="#fff" stroke-width="4" cx="0" cy="0"></circle>
+            {{!-- this is the inner circle --}}
+            {{!-- stroke=<color> is the inner circle color --}}
+            <circle stroke-dasharray="157.07963267948966" r="25" stroke="{{threatColor}}"
+                    transform="rotate(-90)" fill="none" stroke-dashoffset="{{strokeOffset}}" stroke-width="4" cx="0"
+                    cy="0"></circle>
+            <text text-anchor="middle" x="0" y="5" fill="{{threatColor}}" font-size="13">{{details.ticScore}}</text>
+        </g>
+    </g>
+</svg>
 </div>
 
 
+{{#each details.threats as |threat|}}
+    <div class="threat">
+        {{#if threat['influence-score']}}
+            <span> Influence Score: </span>
+            {{threat['influence-score']}}
+        {{/if}}
 
+        {{#if threat['observed-at']}}
+            <span> Threat Seen: </span>
+            {{moment-time threat['observed-at']}}
+        {{/if}}
 
-<div class ="cidrUrl">
-{{#if block.data.details.cidrUrl}}
-<a href="{{block.data.details.cidrUrl}}"> Search Scout Prime </a><i class="btb bt-external-link integration-text-bold-color"></i>
-{{/if}}
-</div>
+        {{#if threat['first-seen']}}
+            <span> Threat Seen: </span>
+            {{moment-time threat['first-seen']}}
+        {{/if}}
 
+        {{#if threat.source}}
+            <span> Source: </span>
+            {{threat.source}}
+        {{/if}}
 
-<div class="cidrOwner">
-{{#if block.data.details.cidrOwner}}
-<p>
-    <i class="fa fa-fw fa-users integration-text-bold-color" ></i><span> Owner: </span>
+        {{#if threat.file}}
+            <span> File: </span>
+            {{threat.file}}
+        {{/if}}
 
-</p>
+        {{#if threat.type}}
+            <span> Type: </span>
+            {{threat.type}}
+        {{/if}}
 
-<ul>
-    {{#each block.data.details.cidrOwner as |item|}}
-    <li>{{item}}</li>
-    {{/each}}
-</ul>
-{{/if}}
+        {{#if threat.name}}
+            <span> Threat Name: </span>
+            {{threat.name}}
+        {{/if}}
 
-</div>
+        {{#if threat.targets}}
+            <span> Targets: </span>
+            {{threat.targets}}
+        {{/if}}
 
-<div class="cidrTime">
-{{#if block.data.details.cTime}}
-    <i class="fa fa-fw fa-clock-o integration-text-bold-color" ></i><span class="time"> Last Seen:  </span>
-    {{moment-time block.data.details.cTime}}
-{{/if}}
-</div>
-
-
-<div class ="fqdnUrl">
-{{#if block.data.details.fqdnUrl}}
-<a href="{{block.data.details.fqdnUrl}}"> Search Scout Prime </a><i class="btb bt-external-link integration-text-bold-color"></i>
-{{/if}}
-</div>
-
-
-<div class="fqdnOwner">
-{{#if block.data.details.fqdnOwner}}
-<p>
-    <i class="fa fa-fw fa-users integration-text-bold-color" ></i><span> Owner: </span>
-
-</p>
-
-<ul>
-    {{#each block.data.details.fqdnOwner as |item|}}
-    <li>{{item}}</li>
-    {{/each}}
-</ul>
-{{/if}}
-
-</div>
-
-<div class="fqdnTime">
-    {{#if block.data.details.fqdnTime}}
-        <i class="fa fa-fw fa-clock-o integration-text-bold-color" ></i><span class="time"> Last Seen:  </span>
-        {{moment-time block.data.details.fqdnTime}}
-    {{/if}}
-</div>
-
+        {{#if threat.reports}}
+            <span> Reports: </span>
+            {{threat.reports}}
+        {{/if}}
+        </div>
+{{/each}}
 

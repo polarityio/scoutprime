@@ -36,14 +36,14 @@ function doLookup(entities, options, cb) {
                         return;
                     }
 
-                    if(_doReturnResult('tic_score', result, parseTicOption)){
+                    if(_doReturnResult('ticScore', result, parseTicOption)){
                         lookupResults.push(result);
-                        log.trace({results: result}, "Results of the IP Query");
+                        log.debug({results: result}, "Results of the IP Query");
                     }
 
                     next(null);
                 });
-            } else if (_isValidCidr(entityObj) && options.lookupCidr) {
+            } /*else if (_isValidCidr(entityObj) && options.lookupCidr) {
                 _lookupEntityCidr(entityObj, options, session_key, function (err, result) {
                     if(err){
                         next(err);
@@ -71,7 +71,7 @@ function doLookup(entities, options, cb) {
 
                     next(null);
                 });
-            } else {
+            }*/ else {
                 next(null);
             }
         }, function (err) {
@@ -95,7 +95,7 @@ function _doReturnResult(property, result, parseTicOption){
         return false;
     }
 
-    if(parseInt(result.data.details[property], 10) < parseTicOption){
+    if(result.data.details[property] < parseTicOption){
         return false;
     }
 
@@ -210,10 +210,21 @@ function _lookupEntity(entityObj, options, session_key, cb) {
 
 
     if (options.username.length > 0) {
-        uri += '/api/search';
+        uri += '/api/elements/get';
     }
 
-    let bodyData = {"e_type_k": "n_ipv4", "query": entityObj.value, "limit": 10};
+    let bodyData = {"params": {
+        "elements": [{
+            "name": entityObj.value,
+            "type": "ipv4"
+        }],
+        "attributes": [
+            "locations",
+            "owners",
+            "sources",
+            "threats",
+            "tic-score"]
+    }};
 
     let scoutUrl = options.url;
 
@@ -239,7 +250,7 @@ function _lookupEntity(entityObj, options, session_key, cb) {
             return;
         }
 
-        if (body.data == null) {
+        if (body.result == null) {
             cb(null, {
                 entity: entityObj.value,
                 data: null
@@ -248,11 +259,15 @@ function _lookupEntity(entityObj, options, session_key, cb) {
             return;
         }
 
-        let owners = body.data[0].n_owner_S;
-        log.trace({body: body}, "Printing out Body");
+        log.debug({threats: body.result[0].threats[0]}, "Checking to see if this queries threats");
 
 
-        var namesOwners = _.reduce(owners, function (reduced, rows) {
+
+
+        log.debug({body: body}, "Printing out Body");
+
+
+       /* var namesOwners = _.reduce(, function (reduced, rows) {
             if (!rows) {
                 return reduced;
             }
@@ -261,7 +276,7 @@ function _lookupEntity(entityObj, options, session_key, cb) {
             return reduced;
         }, {
             owners: []
-        });
+        });*/
 
 
         // The lookup results returned is an array of lookup objects with the following format
@@ -271,14 +286,13 @@ function _lookupEntity(entityObj, options, session_key, cb) {
             // Required: An object containing everything you want passed to the template
             data: {
                 // Required: These are the tags that are displayed in your template
-                summary: [ipIcon + " " + tScore + body.data[0].tic_score_i],
+                summary: [ipIcon + " " + tScore + body.result[0]['tic-score']],
                 // Data that you want to pass back to the notification window details block
                 details: {
-                    tic_score: body.data[0].tic_score_i,
-                    ip_ui: body.data[0].n_ipv4_ui,
-                    owner: namesOwners.owners,
-                    time: body.data[0]['tic_calculated-at_t'],
-                    ipUrl: scoutUrl
+                    ticScore: body.result[0]['tic-score'],
+                    ipData: body.result[0],
+                    ipUrl: scoutUrl,
+                    threats: body.result[0].threats
                 }
             }
         });

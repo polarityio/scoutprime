@@ -1,7 +1,7 @@
 module.exports = {
     "name": "ScoutPrime",
     "acronym": "SP",
-    "logging": {level: 'trace'},
+    "logging": {level: 'debug'},
     "entityTypes": ['IPv4', 'domain'],
     "customTypes":[
         {
