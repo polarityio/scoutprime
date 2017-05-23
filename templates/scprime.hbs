@@ -23,20 +23,21 @@
 
 
 {{#each details.threats as |threat|}}
+
     <div class="threat">
-        {{#if threat['influence-score']}}
+        {{#if threat.[influence-score]}}
             <span> Influence Score: </span>
-            {{threat['influence-score']}}
+            {{threat.[influence-score]}}
         {{/if}}
 
-        {{#if threat['observed-at']}}
+        {{#if threat.[observed-at]}}
             <span> Threat Seen: </span>
-            {{moment-time threat['observed-at']}}
+            {{moment-time threat.[observed-at]}}
         {{/if}}
 
-        {{#if threat['first-seen']}}
+        {{#if threat.[first-seen]}}
             <span> Threat Seen: </span>
-            {{moment-time threat['first-seen']}}
+            {{moment-time threat.[first-seen]}}
         {{/if}}
 
         {{#if threat.source}}
@@ -69,5 +70,6 @@
             {{threat.reports}}
         {{/if}}
         </div>
+
 {{/each}}
 
