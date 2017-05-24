@@ -46,7 +46,21 @@
             </div>
             <div class="row">
                 <div class="col-md-6">
-                    {{#if threat.name}}
+                    {{#if threat.[first-seen]}}
+                    <h2>First Seen:</h2>
+                    {{moment-time threat.[first-seen]}}
+                    {{/if}}
+                </div>
+                <div class="col-md-6">
+                    {{#if threat.[observed-at]}}
+                    <h2>Last Seen:</h2>
+                    {{moment-time threat.[observed-at]}}
+                    {{/if}}
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-md-6">
+                    {{#if threat.protocol}}
                         <h2>Protocol</h2>
                         {{threat.protocol}}
                     {{/if}}
@@ -58,17 +72,33 @@
                     {{/if}}
                 </div>
             </div>
+             <div class="row">
+                <div class="col-md-6">
+                    {{#if threat.file}}
+                        <h2>File:</h2>
+                        {{threat.file}}
+                    {{/if}}
+                </div>
+            </div>
             <div class="row">
                 <div class="col-md-6">
-                    {{#if threat.[first-seen]}}
-                        <h2>First Seen:</h2>
-                        {{moment-time threat.[first-seen]}}
+                    {{#if threat.reference}}
+                    <h2>Reference:</h2>
+                    {{threat.reference}}
+                    {{/if}}
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-md-6">
+                    {{#if threat.source}}
+                    <h2>Source:</h2>
+                    {{threat.source}}
                     {{/if}}
                 </div>
                 <div class="col-md-6">
-                    {{#if threat.targets}}
-                        <h2>Last Seen:</h2>
-                        {{moment-time threat.[observed-at]}}
+                    {{#if threat.reports}}
+                    <h2>Reports:</h2>
+                    {{threat.reports}}
                     {{/if}}
                 </div>
             </div>

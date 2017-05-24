@@ -350,7 +350,7 @@ function _lookupIPv4Elements(elements, entityObjLookup, ticThreshold, options, s
                     // Required: An object containing everything you want passed to the template
                     data: {
                         // Required: These are the tags that are displayed in your template
-                        summary: [CIDR_ICON + " " + cidrScore + " " + element['tic-score']],
+                        summary: [IP_ICON + " " + cidrScore + " " + element['tic-score']],
                         // Data that you want to pass back to the notification window details block
                         details: {
                             ticScore: element['tic-score'],
