@@ -10,10 +10,11 @@ const IP_ICON = '<i class="btb bt-desktop integration-text-bold-color"></i>';
 const CIDR_ICON = '<i class="fa fa-fw fa-cogs integration-text-bold-color" ></i>';
 const FQDN_ICON = '<i class="fa fa-fw fa-globe integration-text-bold-color" ></i>';
 const LOOKUP_BATCH_SIZE = 5;
+
 const ELEMENT_ATTRIBUTES = [
-    "locations",
-    "owners",
-    "sources",
+    // "locations",
+    // "owners",
+    // "sources",
     "threats",
     "tic-score"
 ];
@@ -33,7 +34,7 @@ function doLookup(entities, options, cb) {
         if (err) {
             cb({
                 detail: "Error Creating Session",
-                err:err
+                err: err
             });
             destroySession(options, sessionKey);
             return;
@@ -54,7 +55,7 @@ function doLookup(entities, options, cb) {
                     name: entityObj.value,
                     type: 'cidrv4'
                 });
-            } else if (entityObj.isDomain && options.lookupDomain) {
+            } else if (entityObj.isDomain && options.lookupFqdn) {
                 entityObjLookup.set(entityObj.value.toLowerCase(), entityObj);
                 domainElements.push({
                     name: entityObj.value,
@@ -65,86 +66,61 @@ function doLookup(entities, options, cb) {
 
         let ticThreshold = parseInt(options.tic, 10);
 
-        if (ipElements.length > 0) {
-            async.parallel({
-                ipv4: function (done) {
-                    _lookupIPv4Elements(ipElements, entityObjLookup, ticThreshold, options, sessionKey, function (err, results) {
-                        if (err) {
-                            done(err);
-                            return;
-                        }
 
-                        done(null, results);
-                    });
-                }
-            }, function (err, results) {
-                destroySession(options, sessionKey);
+        async.parallel({
+            ipv4: function (done) {
+                _lookupElements(ipElements, entityObjLookup, ticThreshold, options, sessionKey, function (err, results) {
+                    if (err) {
+                        done(err);
+                        return;
+                    }
 
-                if(err){
-                    cb(err);
+                    done(null, results);
+                });
+            },
+            fqdn: function (done) {
+                _lookupElements(domainElements, entityObjLookup, ticThreshold, options, sessionKey, function (err, results) {
+                    if (err) {
+                        done(err);
+                        return;
+                    }
 
-                }else{
-                    log.info({results:results}, 'Lookup Results');
-                    cb(null, results.ipv4);
-                }
-            });
-        }
-        //
-        // async.each(searchStrings, function (entityObj, next) {
-        //         log.debug({entity: entityObj.value}, "logging the value to validate node ip");
-        //
-        //         _lookupIPv4Elements(ipElements, options, sessionKey, function (err, results) {
-        //             if (err) {
-        //                 next(err);
-        //                 return;
-        //             }
-        //
-        //             if (_doReturnResult('ticScore', results, parseTicOption)) {
-        //                 results.forEach(result => {
-        //                     lookupResults.push(result);
-        //                 });
-        //                 log.debug({results: result}, "Results of the IP Query");
-        //             }
-        //
-        //             next(null);
-        //         });
-        //     } /*else if (_isValidCidr(entityObj) && options.lookupCidr) {
-        //      _lookupEntityCidr(entityObj, options, sessionKey, function (err, result) {
-        //      if(err){
-        //      next(err);
-        //      return;
-        //      }
-        //
-        //      if(_doReturnResult('cidr_score', result, parseTicOption)){
-        //      lookupResults.push(result);
-        //      log.trace({results: result}, "Results of the CIDR Query");
-        //      }
-        //
-        //      next(null);
-        //      });
-        //      } else if (entityObj.isDomain && options.lookupFqdn) {
-        //      _lookupEntityfqdn(entityObj, options, sessionKey, function (err, result) {
-        //      if(err){
-        //      next(err);
-        //      return;
-        //      }
-        //
-        //      if(_doReturnResult('fqdn_score', result, parseTicOption)){
-        //      lookupResults.push(result);
-        //      log.trace({results: result}, "Results of the FQDN Query");
-        //      }
-        //
-        //      next(null);
-        //      });
-        //      }*/
-            // , function (err) {
-            //     if (err) {
-            //         cb(err);
-            //         destroySession((options, session_key))
-            //     } else {
-            //         cb(null, lookupResults);
-            //     }
-            // });
+                    done(null, results);
+                });
+            },
+            cidr: function (done) {
+                _lookupElements(cidrElements, entityObjLookup, ticThreshold, options, sessionKey, function (err, results) {
+                    if (err) {
+                        done(err);
+                        return;
+                    }
+
+                    done(null, results);
+                });
+            }
+        }, function (err, results) {
+            destroySession(options, sessionKey);
+
+            if (err) {
+                cb(err);
+            } else {
+                log.info({results: results}, 'Lookup Results');
+
+                results.ipv4.forEach(function (result) {
+                    lookupResults.push(result);
+                });
+
+                results.fqdn.forEach(function (result) {
+                    lookupResults.push(result);
+                });
+
+                results.cidr.forEach(function (result) {
+                    lookupResults.push(result);
+                });
+
+                cb(null, lookupResults);
+            }
+        });
     });
 }
 
@@ -155,18 +131,6 @@ function _isValidCidr(entityObj) {
     }
 
     return false;
-}
-
-function _doReturnResult(property, result, parseTicOption) {
-    if (result.data === null || result.data.details[property] === null) {
-        return false;
-    }
-
-    if (result.data.details[property] < parseTicOption) {
-        return false;
-    }
-
-    return true;
 }
 
 // function that takes the ErrorObject and passes the error message to the notification window
@@ -279,9 +243,14 @@ function destroySession(options, sessionKey, cb) {
  * @private
  */
 function _isEmptyElement(element) {
+    //if has a tic-score not considered empty
+    if(element['tic-score']){
+        return false;
+    }
+
     // If any of the attributes are an array and has a length > 0 (i.e., there is data)
     // then return false for this being an empty element.
-    for(let i=0; i<ELEMENT_ATTRIBUTES.length; i++){
+    for (let i = 0; i < ELEMENT_ATTRIBUTES.length; i++) {
         let attribute = ELEMENT_ATTRIBUTES[i];
         if (Array.isArray(element[attribute]) && element[attribute].length > 0) {
             return false;
@@ -301,7 +270,12 @@ function _meetsTicThreshold(element, minimumTicScore) {
     return false;
 }
 
-function _lookupIPv4Elements(elements, entityObjLookup, ticThreshold, options, sessionKey, cb) {
+function _lookupElements(elements, entityObjLookup, ticThreshold, options, sessionKey, cb) {
+    if (elements.length === 0) {
+        cb(null, []);
+        return;
+    }
+
     let lookupResults = [];
     let uri = options.url + '/api/elements/get';
     let scoutUrl = options.url;
@@ -335,6 +309,12 @@ function _lookupIPv4Elements(elements, entityObjLookup, ticThreshold, options, s
             return;
         }
 
+        if(body.ok !== true){
+            // Can happen if a lookup is invalid (e.g., invalid domain)
+            cb(null, []);
+            return;
+        }
+
         log.debug({body: body}, "Printing out Body");
 
         body.result.forEach(function (element) {
@@ -343,17 +323,20 @@ function _lookupIPv4Elements(elements, entityObjLookup, ticThreshold, options, s
                     entity: entityObjLookup.get(element.name),
                     data: null
                 });
-            } else if(_meetsTicThreshold(element, ticThreshold)){
+            } else if (_meetsTicThreshold(element, ticThreshold)) {
                 lookupResults.push({
                     // Required: This is the entity object passed into the integration doLookup method
                     entity: entityObjLookup.get(element.name),
                     // Required: An object containing everything you want passed to the template
                     data: {
                         // Required: These are the tags that are displayed in your template
-                        summary: [IP_ICON + " " + cidrScore + " " + element['tic-score']],
+                        //summary: [IP_ICON + " " + cidrScore + " " + element['tic-score']],
+                        summary: ['TIC ' + element['tic-score']],
                         // Data that you want to pass back to the notification window details block
                         details: {
                             ticScore: element['tic-score'],
+                            name: element.name,
+                            type: element.type,
                             sources: element.sources,
                             threats: element.threats
                         }
@@ -363,172 +346,6 @@ function _lookupIPv4Elements(elements, entityObjLookup, ticThreshold, options, s
         });
 
         cb(null, lookupResults);
-    });
-}
-
-
-let cidrScore = " TIC Score ";
-
-function _lookupEntityCidr(entityObj, options, session_key, cb) {
-    let uri = options.url;
-
-
-    if (options.username.length > 0) {
-        uri += '/api/elements/get';
-    }
-
-    let bodyData = {
-        "params": {
-            "elements": [{
-                "name": entityObj.value,
-                "type": "cidrv4"
-            }],
-            "attributes": [
-                "owners",
-                "sources",
-                "threats",
-                "tic-score"]
-        }
-    };
-
-    let scoutUrl = options.url;
-
-
-    request({
-        uri: uri,
-        method: 'POST',
-        headers: {
-            Accept: 'application/json',
-            'x-lg-session': session_key
-        },
-        body: bodyData,
-        json: true
-    }, function (err, response, body) {
-        // check for an error
-        if (err) {
-            cb(err);
-            log.error({err: err}, "Tracing any potential non fatal errors:");
-            return;
-        }
-
-        if (response.statusCode !== 200) {
-            cb(body);
-            return;
-        }
-
-
-        if (body.result == null) {
-            cb(null, {
-                entity: entityObj.value,
-                data: null
-            });
-
-            return;
-        }
-
-        log.debug({body: body}, "Printing out Body");
-
-
-        // The lookup results returned is an array of lookup objects with the following format
-        cb(null, {
-            // Required: This is the entity object passed into the integration doLookup method
-            entity: entityObj,
-            // Required: An object containing everything you want passed to the template
-            data: {
-                // Required: These are the tags that are displayed in your template
-                summary: [cidrIcon + " " + cidrScore + " " + result[0]['tic-score']],
-                // Data that you want to pass back to the notification window details block
-                details: {
-                    ticScore: result[0]['tic-score'],
-                    cidrData: result[0],
-                    cidrUrl: scoutUrl,
-                    threats: result[0].threats
-                }
-            }
-        });
-    });
-}
-
-let fqdnScore = " TIC Score: ";
-
-function _lookupEntityfqdn(entityObj, options, session_key, cb) {
-    let uri = options.url;
-
-
-    if (options.username.length > 0) {
-        uri += '/api/elements/get';
-    }
-
-    let bodyData = {
-        "params": {
-            "elements": [{
-                "name": entityObj.value,
-                "type": "fqdn"
-            }],
-            "attributes": [
-                "owners",
-                "sources",
-                "threats",
-                "tic-score"]
-        }
-    };
-
-    log.trace({bodyData: bodyData}, "URI looks like in lookupEntity");
-
-    let scoutUrl = options.url;
-
-
-    request({
-        uri: uri,
-        method: 'POST',
-        headers: {
-            Accept: 'application/json',
-            'x-lg-session': session_key
-        },
-        body: bodyData,
-        json: true
-    }, function (err, response, body) {
-        // check for an error
-        if (err) {
-            cb(err);
-            log.error({err: err}, "Logging errors");
-            return;
-        }
-
-        if (response.statusCode !== 200) {
-            cb(body);
-            return;
-        }
-
-        if (body.result == null) {
-            cb(null, {
-                entity: entityObj.value,
-                data: null
-            });
-
-            return;
-        }
-
-        log.debug({body: body}, "Printing out Body");
-
-
-        // The lookup results returned is an array of lookup objects with the following format
-        cb(null, {
-            // Required: This is the entity object passed into the integration doLookup method
-            entity: entityObj,
-            // Required: An object containing everything you want passed to the template
-            data: {
-                // Required: These are the tags that are displayed in your template
-                summary: [fqdnIcon + " " + fqdnScore + body.result[0]['tic-score']],
-                // Data that you want to pass back to the notification window details block
-                details: {
-                    ticScore: body.result[0]['tic-score'],
-                    cidrData: body.result[0],
-                    cidrUrl: scoutUrl,
-                    threats: body.result[0].threats
-                }
-            }
-        });
     });
 }
 

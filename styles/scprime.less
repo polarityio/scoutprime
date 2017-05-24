@@ -83,28 +83,69 @@ div.fqdnUrl{
   background-color: inherit;
 }
 
-div.tic-gauge-container{
+div.threat-tic-gauge-container{
   width: 60px;
   height: 60px;
   background-color: inherit;
   float: left;
 }
-.row {
-  //margin-left: 0px;
-  //margin-right: 0px;
-  //padding: 0px;
+
+div.tic-gauge-container{
+  width: 60px;
+  height: 60px;
+  background-color: inherit;
+  float: right;
 }
 
+div.threat-container{
+  word-break:break-all;
+  word-wrap:break-word;
+  padding-bottom: 5px;
+}
+
+div.threat-container:nth-child(even) {
+  background-color: rgba(0,0,0,.05);
+}
+
+.row{
+  //padding: 0px;
+  margin: 0px;
+}
+
+.attribute-row{
+  padding-bottom: 3px;
+}
+
+div [class*="col-"]{
+  padding-left: 5px;
+  padding-right: 5px;
+}
+
+div.container-fluid{
+  padding: 0px;
+}
+
+// Indicator Header
 h1{
-  font-size: 15px;
+  font-size: 16px;
+  font-weight: bold;
+  padding: 0px;
+  margin: 0px;
+  vertical-align: middle;
+}
+
+// Threat Header
+h2{
+  font-size: 14px;
+  //font-weight: bold;
   padding: 0px;
   margin: 0px;
   margin-top: 15px;
   margin-left: -5px;
-
 }
 
-h2{
+// Attribute Header
+h3{
   font-size: 12px;
   padding: 0px;
   margin: 0px;
@@ -112,7 +153,30 @@ h2{
   padding-top: 5px;
 }
 
+
 .element-container{
   //padding: 0px;
-  margin-bottom: 10px;
+  //margin-bottom: 10px;
+  display:flex;
+  align-items: center;
+  justify-content: space-between;
+  border-bottom: 1px solid rgba(0,0,0,.1);
+
+  .title{
+    margin-left: 10px;
+  }
+
+  .indicator{
+
+  }
+}
+
+.no-threats-container{
+
+  h2{
+    font-size: 14px;
+    //font-weight: bold;
+    padding: 5px;
+    margin: 0px;
+  }
 }

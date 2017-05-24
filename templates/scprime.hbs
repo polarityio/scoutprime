@@ -1,109 +1,89 @@
-<div class="element-container container-fluid">
-    {{#if (gt details.threats.length 0)}}
-        {{#each details.threats as |threat|}}
-
-            <div class="row">
-                <div class="tic-gauge-container">
-                    <svg x="0" y="0" width="100%" height="100%" viewBox="0 0 55 50">
-                        <g transform="translate(28,25)">
-                            <g>
-                                <circle r="{{radius}}" stroke="#eee" transform="rotate(-90)" fill="#fff"
-                                        stroke-width="{{strokeWidth}}"
-                                        cx="0"
-                                        cy="0"></circle>
-                                {{!-- this is the inner circle --}}
-                                {{!-- stroke=<color> is the inner circle color --}}
-                                <circle stroke-dasharray="{{circumference}}" r="{{radius}}" stroke="{{threatColor}}"
-                                        transform="rotate(-90)" fill="none" stroke-dashoffset="{{strokeOffset}}"
-                                        stroke-width="{{strokeWidth}}" cx="0"
-                                        cy="0"></circle>
-                                <text text-anchor="middle" x="0" y="5" fill="{{threatColor}}"
-                                      font-size="13">{{threat.[influence-score]}}</text>
-                            </g>
+<div class="container-fluid">
+    <div class="element-container">
+        <div class="title">
+            <h1>
+                {{details.name}}
+            </h1>
+        </div>
+        <div class="indicator">
+            <div class="tic-gauge-container">
+                <svg x="0" y="0" width="100%" height="100%" viewBox="0 0 55 50">
+                    <g transform="translate(28,25)">
+                        <g>
+                            <circle r="{{elementRadius}}" stroke="#eee" transform="rotate(-90)" fill="#fff"
+                                    stroke-width="{{elementStrokeWidth}}"
+                                    cx="0"
+                                    cy="0"></circle>
+                            {{!-- this is the inner circle --}}
+                            {{!-- stroke=<color> is the inner circle color --}}
+                            <circle stroke-dasharray="{{elementCircumference}}" r="{{elementRadius}}"
+                                    stroke="{{elementColor}}"
+                                    transform="rotate(-90)" fill="none"
+                                    stroke-dashoffset="{{elementStrokeOffset}}"
+                                    stroke-width="{{elementStrokeWidth}}" cx="0"
+                                    cy="0"></circle>
+                            <text text-anchor="middle" x="0" y="5" fill="{{elementColor}}"
+                                  font-size="13">{{details.ticScore}}</text>
                         </g>
-                    </svg>
-                </div>
-                <div class="col-md-8">
-                    <h1>
-                        {{threat.name}}
-                    </h1>
-                </div>
+                    </g>
+                </svg>
             </div>
+        </div>
+    </div>
+    {{#if (gt details.threats.length 0)}}
+        {{#each threats as |threat|}}
+            <div class="threat-container">
+                <div class="row">
+                    <div class="threat-tic-gauge-container">
+                        <svg x="0" y="0" width="100%" height="100%" viewBox="0 0 55 50">
+                            <g transform="translate(28,25)">
+                                <g>
+                                    <circle r="{{threatRadius}}" stroke="#eee" transform="rotate(-90)" fill="#fff"
+                                            stroke-width="{{threat.strokeWidth}}"
+                                            cx="0"
+                                            cy="0"></circle>
+                                    {{!-- this is the inner circle --}}
+                                    {{!-- stroke=<color> is the inner circle color --}}
+                                    <circle stroke-dasharray="{{threatCircumference}}" r="{{threatRadius}}"
+                                            stroke="{{threat.color}}"
+                                            transform="rotate(-90)" fill="none"
+                                            stroke-dashoffset="{{threat.strokeOffset}}"
+                                            stroke-width="{{threat.strokeWidth}}" cx="0"
+                                            cy="0"></circle>
+                                    <text text-anchor="middle" x="0" y="5" fill="{{threat.color}}"
+                                          font-size="11">{{threat.ticScore}}</text>
+                                </g>
+                            </g>
+                        </svg>
+                    </div>
+                    <div class="col-md-8">
+                        <h2>
+                            {{threat.name}}
+                        </h2>
+                    </div>
+                </div>
 
-            <div class="row">
-                <div class="col-md-6">
-                    {{#if threat.[influence-score]}}
-                        <h2>Influence Score</h2>
-                        {{threat.[influence-score]}}
-                    {{/if}}
-                </div>
-                <div class="col-md-6">
-                    {{#if threat.type}}
-                        <h2> Type:</h2>
-                        {{threat.type}}
-                    {{/if}}
-                </div>
-            </div>
-            <div class="row">
-                <div class="col-md-6">
-                    {{#if threat.[first-seen]}}
-                    <h2>First Seen:</h2>
-                    {{moment-time threat.[first-seen]}}
-                    {{/if}}
-                </div>
-                <div class="col-md-6">
-                    {{#if threat.[observed-at]}}
-                    <h2>Last Seen:</h2>
-                    {{moment-time threat.[observed-at]}}
-                    {{/if}}
-                </div>
-            </div>
-            <div class="row">
-                <div class="col-md-6">
-                    {{#if threat.protocol}}
-                        <h2>Protocol</h2>
-                        {{threat.protocol}}
-                    {{/if}}
-                </div>
-                <div class="col-md-6">
-                    {{#if threat.targets}}
-                        <h2> Targets:</h2>
-                        {{threat.targets}}
-                    {{/if}}
-                </div>
-            </div>
-             <div class="row">
-                <div class="col-md-6">
-                    {{#if threat.file}}
-                        <h2>File:</h2>
-                        {{threat.file}}
-                    {{/if}}
-                </div>
-            </div>
-            <div class="row">
-                <div class="col-md-6">
-                    {{#if threat.reference}}
-                    <h2>Reference:</h2>
-                    {{threat.reference}}
-                    {{/if}}
-                </div>
-            </div>
-            <div class="row">
-                <div class="col-md-6">
-                    {{#if threat.source}}
-                    <h2>Source:</h2>
-                    {{threat.source}}
-                    {{/if}}
-                </div>
-                <div class="col-md-6">
-                    {{#if threat.reports}}
-                    <h2>Reports:</h2>
-                    {{threat.reports}}
-                    {{/if}}
-                </div>
+                {{#each threat.attributes as |row|}}
+                    <div class="row attribute-row">
+                        {{#each row as |attribute|}}
+                            <div class="col-md-6">
+                                <h3>{{attribute.title}}</h3>
+                                {{#if (eq attribute.type "array")}}
+                                    {{attribute.value.length}} items
+                                {{else if (eq attribute.type "date")}}
+                                    {{moment-time attribute.value}}
+                                {{else}}
+                                    {{attribute.value}}
+                                {{/if}}
+                            </div>
+                        {{/each}}
+                    </div>
+                {{/each}}
             </div>
         {{/each}}
     {{else}}
-        <h1>No Active Threats</h1>
+        <div class="no-threats-container">
+            <h2>No Active Threats</h2>
+        </div>
     {{/if}}
 </div>
