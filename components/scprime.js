@@ -12,6 +12,11 @@ polarity.export = PolarityComponent.extend({
      * StrokeWidth of the ticScore circle
      */
     strokeWidth: 2,
+    threats: Ember.computed('details.threats', function(){
+       this.get('details.threats').forEach(function(threat){
+           
+       })
+    }),
     threatColor: Ember.computed('details.ticScore', function(){
         let tic = this.get('details.ticScore');
         if(tic >= 75){
