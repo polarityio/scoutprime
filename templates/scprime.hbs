@@ -1,77 +1,79 @@
-<div class="ipUrl">
-    {{#if block.data.details.ipUrl}}
-        <a href="{{block.data.details.ipUrl}}"> Search Scout Prime </a><i
-            class="btb bt-external-link integration-text-bold-color"></i>
+<div class="element-container container-fluid">
+    {{#if (gt details.threats.length 0)}}
+        {{#each details.threats as |threat|}}
+
+            <div class="row">
+                <div class="tic-gauge-container">
+                    <svg x="0" y="0" width="100%" height="100%" viewBox="0 0 55 50">
+                        <g transform="translate(28,25)">
+                            <g>
+                                <circle r="{{radius}}" stroke="#eee" transform="rotate(-90)" fill="#fff"
+                                        stroke-width="{{strokeWidth}}"
+                                        cx="0"
+                                        cy="0"></circle>
+                                {{!-- this is the inner circle --}}
+                                {{!-- stroke=<color> is the inner circle color --}}
+                                <circle stroke-dasharray="{{circumference}}" r="{{radius}}" stroke="{{threatColor}}"
+                                        transform="rotate(-90)" fill="none" stroke-dashoffset="{{strokeOffset}}"
+                                        stroke-width="{{strokeWidth}}" cx="0"
+                                        cy="0"></circle>
+                                <text text-anchor="middle" x="0" y="5" fill="{{threatColor}}"
+                                      font-size="13">{{details.ticScore}}</text>
+                            </g>
+                        </g>
+                    </svg>
+                </div>
+                <div class="col-md-8">
+                    <h1>
+                        {{threat.name}}
+                    </h1>
+                </div>
+            </div>
+
+            <div class="row">
+                <div class="col-md-6">
+                    {{#if threat.[influence-score]}}
+                        <h2>Influence Score</h2>
+                        {{threat.[influence-score]}}
+                    {{/if}}
+                </div>
+                <div class="col-md-6">
+                    {{#if threat.type}}
+                        <h2> Type:</h2>
+                        {{threat.type}}
+                    {{/if}}
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-md-6">
+                    {{#if threat.name}}
+                        <h2>Protocol</h2>
+                        {{threat.protocol}}
+                    {{/if}}
+                </div>
+                <div class="col-md-6">
+                    {{#if threat.targets}}
+                        <h2> Targets:</h2>
+                        {{threat.targets}}
+                    {{/if}}
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-md-6">
+                    {{#if threat.[first-seen]}}
+                        <h2>First Seen:</h2>
+                        {{moment-time threat.[first-seen]}}
+                    {{/if}}
+                </div>
+                <div class="col-md-6">
+                    {{#if threat.targets}}
+                        <h2>Last Seen:</h2>
+                        {{moment-time threat.[observed-at]}}
+                    {{/if}}
+                </div>
+            </div>
+        {{/each}}
+    {{else}}
+        <h1>No Active Threats</h1>
     {{/if}}
 </div>
-
-
-<div class="tic-gauge-container">
-    <svg x="0" y="0" width="100%" height="60" viewBox="0 0 60 60">
-        <g transform="translate(30,30)">
-            <g>
-                <circle r="{{radius}}" stroke="#eee" transform="rotate(-90)" fill="#fff" stroke-width="{{strokeWidth}}" cx="0"
-                        cy="0"></circle>
-                {{!-- this is the inner circle --}}
-                {{!-- stroke=<color> is the inner circle color --}}
-                <circle stroke-dasharray="{{circumference}}" r="{{radius}}" stroke="{{threatColor}}"
-                        transform="rotate(-90)" fill="none" stroke-dashoffset="{{strokeOffset}}" stroke-width="{{strokeWidth}}" cx="0"
-                        cy="0"></circle>
-                <text text-anchor="middle" x="0" y="5" fill="{{threatColor}}" font-size="13">{{details.ticScore}}</text>
-            </g>
-        </g>
-    </svg>
-</div>
-
-
-{{#each details.threats as |threat|}}
-
-    <div class="threat">
-        {{#if threat.[influence-score]}}
-            <span> Influence Score: </span>
-            {{threat.[influence-score]}}
-        {{/if}}
-
-        {{#if threat.[observed-at]}}
-            <span> Threat Seen: </span>
-            {{moment-time threat.[observed-at]}}
-        {{/if}}
-
-        {{#if threat.[first-seen]}}
-            <span> Threat Seen: </span>
-            {{moment-time threat.[first-seen]}}
-        {{/if}}
-
-        {{#if threat.source}}
-            <span> Source: </span>
-            {{threat.source}}
-        {{/if}}
-
-        {{#if threat.file}}
-            <span> File: </span>
-            {{threat.file}}
-        {{/if}}
-
-        {{#if threat.type}}
-            <span> Type: </span>
-            {{threat.type}}
-        {{/if}}
-
-        {{#if threat.name}}
-            <span> Threat Name: </span>
-            {{threat.name}}
-        {{/if}}
-
-        {{#if threat.targets}}
-            <span> Targets: </span>
-            {{threat.targets}}
-        {{/if}}
-
-        {{#if threat.reports}}
-            <span> Reports: </span>
-            {{threat.reports}}
-        {{/if}}
-    </div>
-
-{{/each}}
-
