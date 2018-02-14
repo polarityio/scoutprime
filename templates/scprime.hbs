@@ -30,6 +30,26 @@
             </div>
         </div>
     </div>
+    {{#if (gt details.sources.length 0)}}
+        <div class="header">
+            <i class="fa fa-info"></i> <span>Sources</span>
+        </div>
+        <ul class="info">
+            {{#each details.sources as |source|}}
+                <li>{{source}}</li>
+            {{/each}}
+        </ul>
+    {{/if}}
+    {{#if (gt details.owners.length 0)}}
+        <div class="header">
+            <i class="fa fa-user"></i> <span>Owners</span>
+        </div>
+        <ul class="info">
+            {{#each details.owners as |owner|}}
+                <li>{{owner}}</li>
+            {{/each}}
+        </ul>
+    {{/if}}
     {{#if (gt details.threats.length 0)}}
         {{#each threats as |threat|}}
             <div class="threat-container">
@@ -82,8 +102,10 @@
             </div>
         {{/each}}
     {{else}}
+        <!--
         <div class="no-threats-container">
             <h2>No Active Threats</h2>
         </div>
+        -->
     {{/if}}
 </div>

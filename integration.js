@@ -12,10 +12,10 @@ const FQDN_ICON = '<i class="fa fa-fw fa-globe integration-text-bold-color" ></i
 const LOOKUP_BATCH_SIZE = 5;
 
 const ELEMENT_ATTRIBUTES = [
-    // "locations",
-    // "owners",
-    // "sources",
-    "threats",
+    // "locations",  //only works for ipv4
+    "owners",
+    "sources",
+    //"threats",  // no longer works for any type
     "tic-score"
 ];
 
@@ -338,7 +338,8 @@ function _lookupElements(elements, entityObjLookup, ticThreshold, options, sessi
                             name: element.name,
                             type: element.type,
                             sources: element.sources,
-                            threats: element.threats
+                            owners: element.owners
+                            //threats: element.threats
                         }
                     }
                 });
