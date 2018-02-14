@@ -17,14 +17,34 @@ div.ipTime{
     font-weight: bold;
     font-size: 1.1em;
   }
-  padding-bottom: 5px;
 }
+
+div.header {
+  text-align: left;
+  font-size: 12px;
+  font-weight: 300;
+  padding-left: 5px;
+  color: #ADADAD;
+}
+
+ul.info {
+  font-size: 12px;
+  font-weight: bold;
+  list-style: none;
+  padding-left: 10px;
+  //padding-left: 5px;
+}
+
+li::before {
+  content: "• ";
+  color: #aaa; /* or whatever color you prefer */
+}
+
 
 div.ipUrl {
   font-size: .9em;
   font-weight: bold;
   padding-left: 3px;
-  padding-bottom: 5px;
   background-color: inherit;
 }
 
@@ -48,13 +68,137 @@ div.cidrTime{
     font-weight: bold;
     font-size: 1.1em;
   }
-  padding-bottom: 5px;
 }
 
 div.cidrUrl{
   font-size: .9em;
   font-weight: bold;
   padding-left: 3px;
-  padding-bottom: 5px;
   background-color: inherit;
+}
+
+div.fqdnOwner {
+  p{
+    text-align: left;
+    font-weight: bold;
+    font-size: 1.1em;
+  }
+
+  ul{
+    font-size: .9em;
+  }
+
+}
+
+div.fqdnTime{
+  span{
+    text-align: left;
+    font-weight: bold;
+    font-size: 1.1em;
+  }
+}
+
+div.fqdnUrl{
+  font-size: .9em;
+  font-weight: bold;
+  padding-left: 3px;
+  background-color: inherit;
+}
+
+div.threat-tic-gauge-container{
+  width: 60px;
+  height: 60px;
+  background-color: inherit;
+  float: left;
+}
+
+div.tic-gauge-container{
+  width: 60px;
+  height: 60px;
+  background-color: inherit;
+  float: right;
+}
+
+div.threat-container{
+  word-break:break-all;
+  word-wrap:break-word;
+  padding-bottom: 5px;
+}
+
+div.threat-container:nth-child(even) {
+  background-color: rgba(0,0,0,.05);
+}
+
+.row{
+  //padding: 0px;
+  margin: 0px;
+}
+
+.attribute-row{
+  padding-bottom: 3px;
+}
+
+div [class*="col-"]{
+  padding-left: 5px;
+  padding-right: 5px;
+}
+
+div.container-fluid{
+  padding: 0px;
+}
+
+// Indicator Header
+h1{
+  font-size: 16px;
+  font-weight: bold;
+  padding: 0px;
+  margin: 0px;
+  vertical-align: middle;
+}
+
+// Threat Header
+h2{
+  font-size: 14px;
+  //font-weight: bold;
+  padding: 0px;
+  margin: 0px;
+  margin-top: 15px;
+  margin-left: -5px;
+}
+
+// Attribute Header
+h3{
+  font-size: 12px;
+  padding: 0px;
+  margin: 0px;
+  font-weight: bold;
+  padding-top: 5px;
+}
+
+
+.element-container{
+  //padding: 0px;
+  //margin-bottom: 10px;
+  display:flex;
+  align-items: center;
+  justify-content: space-between;
+  border-bottom: 1px solid rgba(0,0,0,.1);
+
+  .title{
+    margin-left: 10px;
+  }
+
+  .indicator{
+
+  }
+}
+
+.no-threats-container{
+
+  h2{
+    font-size: 14px;
+    //font-weight: bold;
+    padding: 5px;
+    margin: 0px;
+  }
 }

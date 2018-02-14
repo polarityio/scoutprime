@@ -1,95 +1,137 @@
 'use strict';
 
-var request = require('request');
-var _ = require('lodash');
-var async = require('async');
-var log = null;
+let request = require('request');
+let _ = require('lodash');
+let async = require('async');
+let ip = require('ip');
+let log = null;
 
+const IP_ICON = '<i class="btb bt-desktop integration-text-bold-color"></i>';
+const CIDR_ICON = '<i class="fa fa-fw fa-cogs integration-text-bold-color" ></i>';
+const FQDN_ICON = '<i class="fa fa-fw fa-globe integration-text-bold-color" ></i>';
+const LOOKUP_BATCH_SIZE = 5;
+
+const ELEMENT_ATTRIBUTES = [
+    // "locations",  //only works for ipv4
+    "owners",
+    "sources",
+    //"threats",  // no longer works for any type
+    "tic-score"
+];
 
 function startup(logger) {
     log = logger;
 }
 
-let ipIcon = '<i class="btb bt-desktop integration-text-bold-color"></i>';
-let cidrIcon = '<i class="fa fa-fw fa-cogs integration-text-bold-color" ></i>';
-
-
 function doLookup(entities, options, cb) {
-    let entitiesWithNoData = [];
+    let ipElements = [];
+    let cidrElements = [];
+    let domainElements = [];
+    let entityObjLookup = new Map();
     let lookupResults = [];
 
-    let parseTicOption = parseInt(options.tic);
-    log.debug({parsetic: parseTicOption}, "parse tic options");
-
-    createSession(options, function(err, session_key){
-        if(err){
-            log.error(err, "Error: %d", err.detail);
-            cb(err);
-            destroySession(options, session_key);
+    createSession(options, function (err, sessionKey) {
+        if (err) {
+            cb({
+                detail: "Error Creating Session",
+                err: err
+            });
+            destroySession(options, sessionKey);
             return;
         }
 
+        for (let i = 0; i < entities.length; i++) {
+            let entityObj = entities[i];
 
-        async.each(entities, function (entityObj, next) {
-            if (entityObj.isIPv4) {
-                _lookupEntity(entityObj, options, session_key, function (err, result) {
-                    if (err) {
-                        next(err);
-                    } else if(result.data.details.tic_score === null || (parseInt(result.data.details.tic_score) <= parseTicOption)){
-                        next(null);
-                    }
-                    else {
-                        lookupResults.push(result); log.debug({results: result}, "Results of the Query");
-                        next(null);
-                    }
+            if (entityObj.isIPv4 && options.lookupIp) {
+                entityObjLookup.set(entityObj.value.toLowerCase(), entityObj);
+                ipElements.push({
+                    name: entityObj.value,
+                    type: 'ipv4'
                 });
-            } else if (entityObj.types.indexOf('custom.cidr') > 0) {
-                _lookupEntityCidr(entityObj, options, session_key, function (err, result) {
-                    if (err) {
-                        next(err);
-                    } else if (result.data.details.cidr_score === null || (parseInt(result.data.details.cidr_score) <= parseTicOption)) {
-                        next(null);
-                    }
-                    else {
-                        lookupResults.push(result); log.debug({results: result}, "Results of the Query");
-                        next(null);
-                    }
+            } else if (_isValidCidr(entityObj) && options.lookupCidr) {
+                entityObjLookup.set(entityObj.value.toLowerCase(), entityObj);
+                cidrElements.push({
+                    name: entityObj.value,
+                    type: 'cidrv4'
                 });
-            } else if (entityObj.types.indexOf('custom.fqdn') > 0) {
-                _lookupEntityfqdn(entityObj, options, session_key, function (err, result) {
-                    if (err) {
-                        next(err);
-                    } //else if (result.data.details.cidr_score === null || (parseInt(result.data.details.cidr_score) <= parseTicOption)) {
-                        //next(null);
-                    //}
-                    else {
-                        lookupResults.push(result);
-                        log.debug({results: result}, "Results of the Query");
-                        next(null);
-                    }
+            } else if (entityObj.isDomain && options.lookupFqdn) {
+                entityObjLookup.set(entityObj.value.toLowerCase(), entityObj);
+                domainElements.push({
+                    name: entityObj.value,
+                    type: 'fqdn'
                 });
-            } else {
-                lookupResults.push({entity: entityObj, data: null}); //Cache the missed results
-                next(null);
             }
-        }, function (err) {
-        /**
-         * The callback should return 3 parameters
-         *
-         * @parameter as JSON api formatted error message or a string error message, null if there is no error
-         *      Any error message returned here is displayed in the notification window for the user that experienced
-         *      the error.  This is a good place to return errors related to API authentication or other issues.     *
-         * @parameter entitiesWithNoData an Array of entity objects that had no data for them.  This is used by the caching
-         * system.
-         * @parameter lookupResults An array of lookup result objects
-         */
-            cb(err, lookupResults);
-            destroySession(options,session_key);
+        }
+
+        let ticThreshold = parseInt(options.tic, 10);
+
+
+        async.parallel({
+            ipv4: function (done) {
+                _lookupElements(ipElements, entityObjLookup, ticThreshold, options, sessionKey, function (err, results) {
+                    if (err) {
+                        done(err);
+                        return;
+                    }
+
+                    done(null, results);
+                });
+            },
+            fqdn: function (done) {
+                _lookupElements(domainElements, entityObjLookup, ticThreshold, options, sessionKey, function (err, results) {
+                    if (err) {
+                        done(err);
+                        return;
+                    }
+
+                    done(null, results);
+                });
+            },
+            cidr: function (done) {
+                _lookupElements(cidrElements, entityObjLookup, ticThreshold, options, sessionKey, function (err, results) {
+                    if (err) {
+                        done(err);
+                        return;
+                    }
+
+                    done(null, results);
+                });
+            }
+        }, function (err, results) {
+            destroySession(options, sessionKey);
+
+            if (err) {
+                cb(err);
+            } else {
+                log.info({results: results}, 'Lookup Results');
+
+                results.ipv4.forEach(function (result) {
+                    lookupResults.push(result);
+                });
+
+                results.fqdn.forEach(function (result) {
+                    lookupResults.push(result);
+                });
+
+                results.cidr.forEach(function (result) {
+                    lookupResults.push(result);
+                });
+
+                cb(null, lookupResults);
+            }
         });
     });
-
 }
 
+function _isValidCidr(entityObj) {
+    if (entityObj.types.indexOf('custom.cidr') >= 0 &&
+        ip.cidr(entityObj.value) !== null) {
+        return true;
+    }
+
+    return false;
+}
 
 // function that takes the ErrorObject and passes the error message to the notification window
 var _createJsonErrorPayload = function (msg, pointer, httpCode, code, title, meta) {
@@ -122,15 +164,15 @@ var _createJsonErrorObject = function (msg, pointer, httpCode, code, title, meta
     return error;
 };
 
-var createSession = function(options, cb){
+var createSession = function (options, cb) {
     let uri = options.url;
 
-    if (options.username.length > 0){
+    if (options.username.length > 0) {
         uri += '/api/auth/login';
     }
-    log.debug({uri:uri}, "What does the URI look like");
+    log.trace({uri: uri}, "What does the URI look like");
 
-    let postData = { "params" : { "username": options.username, "password": options.password}};
+    let postData = {"params": {"username": options.username, "password": options.password}};
 
 
     request({
@@ -142,7 +184,7 @@ var createSession = function(options, cb){
         },
         body: postData,
         json: true
-    }, function(err, response, body){
+    }, function (err, response, body) {
         if (err) {
             cb(err);
             return;
@@ -153,7 +195,7 @@ var createSession = function(options, cb){
             return;
         }
 
-        if(response.statusCode === 401){
+        if (response.statusCode === 401) {
             cb(_createJsonErrorPayload("Invalid Credentials, please check your User Name and Password", null, '401', '2A', 'Invalid Credentials', {
                 err: err
             }));
@@ -164,18 +206,18 @@ var createSession = function(options, cb){
     });
 };
 
-var destroySession = function(options, session_key, cb){
+function destroySession(options, sessionKey, cb) {
 
-    var uri = options.url + '/api/auth/login';
+    let uri = options.url + '/api/auth/login';
 
     request({
         method: 'GET',
         uri: uri,
         headers: {
             'Accept': 'application/json',
-            'x-lg-session': session_key
+            'x-lg-session': sessionKey
         }
-    }, function(err, response, body) {
+    }, function (err, response, body) {
         if (err) {
             if (cb) {
                 cb(_createJsonErrorPayload("Session is being Destroyed", body, '401', '2A', 'Session Terminated', {
@@ -189,38 +231,76 @@ var destroySession = function(options, session_key, cb){
             cb(null, null);
         }
     });
-};
+}
 
 
-let tScore = "Tic Score ";
-
-function _lookupEntity(entityObj, options, session_key, cb) {
-    let uri = options.url;
-
-    log.debug({uri:uri}, "URI looks like in lookupEntity");
-    log.debug( "session_key looks like in lookupEntity: %s", session_key);
-
-    if (options.username.length > 0) {
-        uri += '/api/search';
+/**
+ * What is considered a miss in LG?
+ *
+ * @param element
+ * @param minimumTicScore
+ * @returns {boolean}
+ * @private
+ */
+function _isEmptyElement(element) {
+    //if has a tic-score not considered empty
+    if(element['tic-score']){
+        return false;
     }
 
-    let bodyData = {"e_type_k": "n_ipv4", "query": entityObj.value, "limit": 10};
+    // If any of the attributes are an array and has a length > 0 (i.e., there is data)
+    // then return false for this being an empty element.
+    for (let i = 0; i < ELEMENT_ATTRIBUTES.length; i++) {
+        let attribute = ELEMENT_ATTRIBUTES[i];
+        if (Array.isArray(element[attribute]) && element[attribute].length > 0) {
+            return false;
+        }
+    }
 
+    return true;
+}
+
+function _meetsTicThreshold(element, minimumTicScore) {
+    if (element['tic-score'] !== null &&
+        element['tic-score'] > 0 &&
+        element['tic-score'] >= minimumTicScore) {
+        return true;
+    }
+
+    return false;
+}
+
+function _lookupElements(elements, entityObjLookup, ticThreshold, options, sessionKey, cb) {
+    if (elements.length === 0) {
+        cb(null, []);
+        return;
+    }
+
+    let lookupResults = [];
+    let uri = options.url + '/api/elements/get';
     let scoutUrl = options.url;
+
+    let bodyData = {
+        "params": {
+            "elements": elements,
+            "attributes": ELEMENT_ATTRIBUTES
+        }
+    };
 
     request({
         uri: uri,
         method: 'POST',
         headers: {
             Accept: 'application/json',
-            'x-lg-session': session_key
+            'x-lg-session': sessionKey
         },
         body: bodyData,
         json: true
-    }, function(err, response, body) {
+    }, function (err, response, body) {
         // check for an error
         if (err) {
             cb(err);
+            log.error({err: err}, "HTTP Request Error Looking up IPv4");
             return;
         }
 
@@ -229,218 +309,67 @@ function _lookupEntity(entityObj, options, session_key, cb) {
             return;
         }
 
-        let owners = body.data[0].n_owner_S;
-        log.debug({body: body}, "Printing out Body");
-
-        log.debug({owner: owners}, "Printing out Owners");
-
-        var namesOwners = _.reduce(owners, function (reduced, rows) {
-            if (!rows) {
-                return reduced;
-            }
-            reduced.owners.push(rows);
-
-            return reduced;
-        }, {
-            owners: []
-        });
-
-
-        // The lookup results returned is an array of lookup objects with the following format
-        cb(null, {
-            // Required: This is the entity object passed into the integration doLookup method
-            entity: entityObj,
-            // Required: An object containing everything you want passed to the template
-            data: {
-                // Required: this is the string value that is displayed in the template
-                entity_name: entityObj.value,
-                // Required: These are the tags that are displayed in your template
-                summary: [ipIcon + " " + tScore + body.data[0].tic_score_i],
-                // Data that you want to pass back to the notification window details block
-                details: {
-                    tic_score: body.data[0].tic_score_i,
-                    ip_ui: body.data[0].n_ipv4_ui,
-                    owner: namesOwners.owners,
-                    time: body.data[0]['tic_calculated-at_t'],
-                    ipUrl: scoutUrl
-                }
-            }
-        });
-    });
-}
-
-
-let cidrScore = "CIDR Tic Score ";
-
-function _lookupEntityCidr(entityObj, options, session_key, cb) {
-    let uri = options.url;
-
-    log.debug({uri:uri}, "URI looks like in lookupEntity");
-    log.debug( "session_key looks like in lookupEntity: %s", session_key);
-
-    if (options.username.length > 0) {
-        uri += '/api/search';
-    }
-
-    let bodyData = {"e_type_k": "n_cidr", "query": entityObj.value, "limit": 10};
-
-    let scoutUrl = options.url;
-
-
-    request({
-        uri: uri,
-        method: 'POST',
-        headers: {
-            Accept: 'application/json',
-            'x-lg-session': session_key
-        },
-        body: bodyData,
-        json: true
-    }, function(err, response, body) {
-        // check for an error
-        if (err) {
-            log.trace({err: err}, "Tracing any potential non fatal errors:");
-            return;
-        }
-
-        if (response.statusCode !== 200) {
-            cb(body);
+        if(body.ok !== true){
+            // Can happen if a lookup is invalid (e.g., invalid domain)
+            cb(null, []);
             return;
         }
 
         log.debug({body: body}, "Printing out Body");
 
-        let owners = body.data[0].n_owner_S;
-
-        let nameOwners = _.reduce(owners, function (reduced, rows) {
-            if (!rows) {
-                return reduced;
-            }
-            reduced.owners.push(rows);
-
-            return reduced;
-        }, {
-            owners: []
-        });
-
-
-        // The lookup results returned is an array of lookup objects with the following format
-        cb(null, {
-            // Required: This is the entity object passed into the integration doLookup method
-            entity: entityObj,
-            // Required: An object containing everything you want passed to the template
-            data: {
-                // Required: this is the string value that is displayed in the template
-                entity_name: entityObj.value,
-                // Required: These are the tags that are displayed in your template
-                summary: [cidrIcon + " " +  cidrScore + body.data[0].tic_score_i],
-                // Data that you want to pass back to the notification window details block
-                details: {
-                    cidr_score: body.data[0].tic_score_i,
-                    cidr_s: body.data[0].n_cidr_s,
-                    cidrOwner: nameOwners.owners,
-                    cTime: body.data[0]['tic_calculated-at_t'],
-                    cidrUrl: scoutUrl
-                }
+        body.result.forEach(function (element) {
+            if (_isEmptyElement(element)) {
+                lookupResults.push({
+                    entity: entityObjLookup.get(element.name),
+                    data: null
+                });
+            } else if (_meetsTicThreshold(element, ticThreshold)) {
+                lookupResults.push({
+                    // Required: This is the entity object passed into the integration doLookup method
+                    entity: entityObjLookup.get(element.name),
+                    // Required: An object containing everything you want passed to the template
+                    data: {
+                        // Required: These are the tags that are displayed in your template
+                        //summary: [IP_ICON + " " + cidrScore + " " + element['tic-score']],
+                        summary: ['TIC ' + element['tic-score']],
+                        // Data that you want to pass back to the notification window details block
+                        details: {
+                            ticScore: element['tic-score'],
+                            name: element.name,
+                            type: element.type,
+                            sources: element.sources,
+                            owners: element.owners
+                            //threats: element.threats
+                        }
+                    }
+                });
             }
         });
-    });
-}
 
-
-function _lookupEntityfqdn(entityObj, options, session_key, cb) {
-    let uri = options.url;
-
-
-    log.debug( "session_key looks like in lookupEntity: %s", session_key);
-
-    if (options.username.length > 0) {
-        uri += '/api/search';
-    }
-
-    let bodyData = {"e_type_k": "n_fqdn", "query": entityObj.value, "limit": 10};
-
-    log.debug({bodyData: bodyData}, "URI looks like in lookupEntity");
-
-    let scoutUrl = options.url;
-
-
-    request({
-        uri: uri,
-        method: 'POST',
-        headers: {
-            Accept: 'application/json',
-            'x-lg-session': session_key
-        },
-        body: bodyData,
-        json: true
-    }, function(err, response, body) {
-        // check for an error
-        if (err) {
-            log.trace({err: err}, "Tracing any potential non fatal errors:");
-            return;
-        }
-
-        if (response.statusCode !== 200) {
-            cb(body);
-            return;
-        }
-
-        log.debug({body: body}, "Printing out Body");
-
-        /*let owners = body.data[0].n_owner_S;
-
-        let nameOwners = _.reduce(owners, function (reduced, rows) {
-            if (!rows) {
-                return reduced;
-            }
-            reduced.owners.push(rows);
-
-            return reduced;
-        }, {
-            owners: []
-        });*/
-
-
-        // The lookup results returned is an array of lookup objects with the following format
-        cb(null, {
-            // Required: This is the entity object passed into the integration doLookup method
-            entity: entityObj,
-            // Required: An object containing everything you want passed to the template
-            data: {
-                // Required: this is the string value that is displayed in the template
-                entity_name: entityObj.value,
-                // Required: These are the tags that are displayed in your template
-                summary: ["Test"],
-                // Data that you want to pass back to the notification window details block
-                details: {
-                    body: body
-                }
-            }
-        });
+        cb(null, lookupResults);
     });
 }
 
 function validateOptions(userOptions, cb) {
     let errors = [];
-    if(typeof userOptions.url.value !== 'string' ||
-        (typeof userOptions.url.value === 'string' && userOptions.url.value.length === 0)){
+    if (typeof userOptions.url.value !== 'string' ||
+        (typeof userOptions.url.value === 'string' && userOptions.url.value.length === 0)) {
         errors.push({
             key: 'url',
             message: 'You must provide a valid Scout Prime URL'
         })
     }
 
-    if(typeof userOptions.username.value !== 'string' ||
-        (typeof userOptions.username.value === 'string' && userOptions.username.value.length === 0)){
+    if (typeof userOptions.username.value !== 'string' ||
+        (typeof userOptions.username.value === 'string' && userOptions.username.value.length === 0)) {
         errors.push({
             key: 'username',
             message: 'You must provide your Scout Prime User Name'
         })
     }
 
-    if(typeof userOptions.password.value !== 'string' ||
-        (typeof userOptions.password.value === 'string' && userOptions.password.value.length === 0)){
+    if (typeof userOptions.password.value !== 'string' ||
+        (typeof userOptions.password.value === 'string' && userOptions.password.value.length === 0)) {
         errors.push({
             key: 'password',
             message: 'You must provide your Scout Prime Password'
