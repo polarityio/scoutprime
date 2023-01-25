@@ -1,13 +1,11 @@
 {
   "name": "ScoutPrime",
   "acronym": "SP",
+  "defaultColor": "light-blue",
   "logging": {
     "level": "debug"
   },
-  "entityTypes": [
-    "IPv4",
-    "domain"
-  ],
+  "entityTypes": ["IPv4", "domain"],
   "customTypes": [
     {
       "key": "cidr",
@@ -16,9 +14,7 @@
       "isGlobal": true
     }
   ],
-  "styles": [
-    "./styles/scprime.less"
-  ],
+  "styles": ["./styles/scprime.less"],
   "block": {
     "component": {
       "file": "./components/scprime.js"
