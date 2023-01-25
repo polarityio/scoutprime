@@ -2,7 +2,7 @@ module.exports = {
   name: 'ScoutPrime',
   acronym: 'SP',
   defaultColor: 'light-blue',
-  logging: { level: 'debug' },
+  logging: { level: 'info' },
   entityTypes: ['IPv4', 'domain'],
   customTypes: [
     {
