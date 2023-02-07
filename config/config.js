@@ -33,22 +33,13 @@ module.exports = {
             "adminOnly": true
         },
         {
-            "key": "username",
-            "name": "User Name",
-            "description": "User Name for Scout Prime",
-            "default": "",
-            "type": "text",
-            "userCanEdit": true,
-            "adminOnly": false
-        },
-        {
-            "key": "password",
-            "name": "Password",
-            "description": "Password for your login to Scout Prime",
+            "key": "apiKey",
+            "name": "API Key",
+            "description": "API Key",
             "default": "",
             "type": "password",
-            "userCanEdit": true,
-            "adminOnly": false
+            "userCanEdit": false,
+            "adminOnly": true
         },
         {
             "key": "tic",
