@@ -1,111 +1,155 @@
 <div class="container-fluid">
-    <div class="element-container">
-        <div class="title">
-            <h1>
-                {{details.name}}
-            </h1>
+  <div class="ticscore-container">
+    {{#each details.elements.results as |result|}}
+      <div class="title">
+        <h1>
+          {{result.name}}
+        </h1>
+      </div>
+      <div class="indicator">
+        <div class="tic-gauge-container">
+          <svg x="0" y="0" width="100%" height="100%" viewBox="0 0 55 50">
+            <g transform="translate(28,25)">
+              <g>
+                <circle
+                  r="{{elementRadius}}"
+                  stroke="#eee"
+                  transform="rotate(-90)"
+                  fill="#fff"
+                  stroke-width="{{elementStrokeWidth}}"
+                  cx="0"
+                  cy="0"
+                ></circle>
+                {{! this is the inner circleas }}
+                {{! stroke=<color> is the inner circle color }}
+                <circle
+                  stroke-dasharray="{{elementCircumference}}"
+                  r="{{elementRadius}}"
+                  stroke="{{elementColor}}"
+                  transform="rotate(-90)"
+                  fill="none"
+                  stroke-dashoffset="{{elementStrokeOffset}}"
+                  stroke-width="{{elementStrokeWidth}}"
+                  cx="0"
+                  cy="0"
+                ></circle>
+                <text
+                  text-anchor="middle"
+                  x="0"
+                  y="5"
+                  fill="{{elementColor}}"
+                  font-size="13"
+                >{{result.ticScore}}</text>
+              </g>
+            </g>
+          </svg>
         </div>
-        <div class="indicator">
-            <div class="tic-gauge-container">
-                <svg x="0" y="0" width="100%" height="100%" viewBox="0 0 55 50">
-                    <g transform="translate(28,25)">
-                        <g>
-                            <circle r="{{elementRadius}}" stroke="#eee" transform="rotate(-90)" fill="#fff"
-                                    stroke-width="{{elementStrokeWidth}}"
-                                    cx="0"
-                                    cy="0"></circle>
-                            {{!-- this is the inner circle --}}
-                            {{!-- stroke=<color> is the inner circle color --}}
-                            <circle stroke-dasharray="{{elementCircumference}}" r="{{elementRadius}}"
-                                    stroke="{{elementColor}}"
-                                    transform="rotate(-90)" fill="none"
-                                    stroke-dashoffset="{{elementStrokeOffset}}"
-                                    stroke-width="{{elementStrokeWidth}}" cx="0"
-                                    cy="0"></circle>
-                            <text text-anchor="middle" x="0" y="5" fill="{{elementColor}}"
-                                  font-size="13">{{details.ticScore}}</text>
-                        </g>
-                    </g>
-                </svg>
-            </div>
-        </div>
-    </div>
-    {{#if (gt details.sources.length 0)}}
-        <div class="header">
-            <i class="fa fa-info"></i> <span>Sources</span>
-        </div>
-        <ul class="info">
-            {{#each details.sources as |source|}}
-                <li>{{source}}</li>
-            {{/each}}
-        </ul>
-    {{/if}}
-    {{#if (gt details.owners.length 0)}}
-        <div class="header">
-            <i class="fa fa-user"></i> <span>Owners</span>
-        </div>
-        <ul class="info">
-            {{#each details.owners as |owner|}}
-                <li>{{owner}}</li>
-            {{/each}}
-        </ul>
-    {{/if}}
-    {{#if (gt details.threats.length 0)}}
-        {{#each threats as |threat|}}
-            <div class="threat-container">
-                <div class="row">
-                    <div class="threat-tic-gauge-container">
-                        <svg x="0" y="0" width="100%" height="100%" viewBox="0 0 55 50">
-                            <g transform="translate(28,25)">
-                                <g>
-                                    <circle r="{{threatRadius}}" stroke="#eee" transform="rotate(-90)" fill="#fff"
-                                            stroke-width="{{threat.strokeWidth}}"
-                                            cx="0"
-                                            cy="0"></circle>
-                                    {{!-- this is the inner circle --}}
-                                    {{!-- stroke=<color> is the inner circle color --}}
-                                    <circle stroke-dasharray="{{threatCircumference}}" r="{{threatRadius}}"
-                                            stroke="{{threat.color}}"
-                                            transform="rotate(-90)" fill="none"
-                                            stroke-dashoffset="{{threat.strokeOffset}}"
-                                            stroke-width="{{threat.strokeWidth}}" cx="0"
-                                            cy="0"></circle>
-                                    <text text-anchor="middle" x="0" y="5" fill="{{threat.color}}"
-                                          font-size="11">{{threat.ticScore}}</text>
-                                </g>
-                            </g>
-                        </svg>
-                    </div>
-                    <div class="col-md-8">
-                        <h2>
-                            {{threat.name}}
-                        </h2>
-                    </div>
-                </div>
-
-                {{#each threat.attributes as |row|}}
-                    <div class="row attribute-row">
-                        {{#each row as |attribute|}}
-                            <div class="col-md-6">
-                                <h3>{{attribute.title}}</h3>
-                                {{#if (eq attribute.type "array")}}
-                                    {{attribute.value.length}} items
-                                {{else if (eq attribute.type "date")}}
-                                    {{moment-time attribute.value}}
-                                {{else}}
-                                    {{attribute.value}}
-                                {{/if}}
-                            </div>
-                        {{/each}}
-                    </div>
-                {{/each}}
-            </div>
-        {{/each}}
-    {{else}}
-        <!--
-        <div class="no-threats-container">
-            <h2>No Active Threats</h2>
-        </div>
-        -->
-    {{/if}}
+      </div>
+    {{/each}}
+  </div>
 </div>
+
+{{! owners }}
+{{#if details.elements.results}}
+  <h1 class="p-title">{{fa-icon icon="layer-group" fixedWidth=true}}
+    Owners:
+  </h1>
+  {{#each details.elements.results as |result|}}
+    {{#if result.owners}}
+      <div class="info">
+        {{#each result.owners as |owner|}}
+          <div>
+            <span class="p-value">{{owner}}</span>
+          </div>
+        {{/each}}
+      </div>
+    {{/if}}
+  {{/each}}
+{{/if}}
+
+{{! locations }}
+{{#if details.elements.results}}
+  <h1 class="p-title">{{fa-icon icon="layer-group" fixedWidth=true}}
+    Locations:
+  </h1>
+  {{#each details.elements.results as |result|}}
+    {{#if result.locations}}
+      <div class="info">
+        {{#each result.locations as |location|}}
+          {{#each-in location as |key value|}}
+            {{#if (eq key "geoPoint")}}
+              {{#each-in location.geoPoint as |key value|}}
+                {{#if (eq key "lon")}}
+                  <div>
+                    <span class="p-key">lon:</span>
+                    <span class="p-value">{{value}}</span>
+                  </div>
+                {{/if}}
+                {{#if (eq key "lat")}}
+                  <div>
+                    <span class="p-key">lat:</span>
+                    <span class="p-value">{{value}}</span>
+                  </div>
+                {{/if}}
+              {{/each-in}}
+            {{else}}
+              <div>
+                <span class="p-key">{{key}}:</span>
+                <span class="p-value">{{value}}</span>
+              </div>
+            {{/if}}
+          {{/each-in}}
+        {{/each}}
+      </div>
+    {{/if}}
+  {{/each}}
+{{/if}}
+
+{{! sources }}
+{{#if details.sources.results}}
+  <h1 class="p-title">{{fa-icon icon="layer-group" fixedWidth=true}}
+    Sources:
+  </h1>
+  <div class="info">
+    {{#each sources as |obj|}}
+      <div class="sources-container">
+        {{#each obj.sources as |source|}}
+          <div>
+            <span class="p-key">Source:</span>
+            <span class="p-value">{{source}}</span>
+          </div>
+        {{/each}}
+        <div>
+          <span class="p-key">Tic Score:</span>
+          <span class="p-value">{{obj.right.ticScore}}</span>
+        </div>
+        <div>
+          <span class="p-key">First Seen:</span>
+          <span class="p-value">{{moment-format
+              obj.firstSeen
+              "MM/DD/YYYY HH:mm:ss"
+              timeZone=timezone
+            }}</span>
+        </div>
+        <div>
+          <span class="p-key">Last Seen:</span>
+          <span class="p-value">{{moment-format
+              obj.lastSeen
+              "MM/DD/YYYY HH:mm:ss"
+              timeZone=timezone
+            }}</span>
+        </div>
+        <div>
+          <span class="p-key">Classifications:</span>
+          {{#each obj.right.classifications as |classification|}}
+            <span class="tag">{{classification}}</span>
+          {{/each}}
+        </div>
+        <div>
+          <span class="p-key">Etpro Risk Score:</span>
+          <span class="p-value">{{obj.meta.etproRiskScore_ui}}</span>
+        </div>
+      </div>
+    {{/each}}
+  </div>
+{{/if}}

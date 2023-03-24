@@ -1,0 +1,232 @@
+{
+  "name": "ScoutPrime",
+  "hostname": "dev.polarity",
+  "pid": 4101,
+  "level": 10,
+  "lookupResult": {
+    "entity": {
+      "IPType": "IPv4",
+      "channels": [],
+      "hashType": "",
+      "isDomain": false,
+      "isEmail": false,
+      "isGeo": false,
+      "isHTMLTag": false,
+      "isHash": false,
+      "isHex": false,
+      "isIP": true,
+      "isIPv4": true,
+      "isIPv6": false,
+      "isMD5": false,
+      "isPrivateIP": false,
+      "isSHA1": false,
+      "isSHA256": false,
+      "isSHA512": false,
+      "isURL": false,
+      "latitude": 0,
+      "longitude": 0,
+      "rawValue": "208.100.26.245",
+      "requestContext": { "isUserInitiated": true, "requestType": "OnDemand" },
+      "type": "IPv4",
+      "types": ["IPv4", "IP"],
+      "value": "208.100.26.245"
+    },
+    "displayValue": "208.100.26.245",
+    "isVolatile": false,
+    "isCached": false,
+    "data": {
+      "details": {
+        "elements": {
+          "results": [
+            {
+              "labels": [],
+              "locations": [
+                {
+                  "city": "chicago",
+                  "country": "USA",
+                  "country2Digit": "US",
+                  "countryName": "United States",
+                  "geoPoint": { "lat": 41.88, "lon": -87.63 },
+                  "lastSeen": 1675929679162,
+                  "region": "IL",
+                  "sources": ["Digital Element Geo"]
+                }
+              ],
+              "name": "208.100.26.245",
+              "owners": [
+                "american registry for internet numbers",
+                "steadfast",
+                "steadfast networks"
+              ],
+              "ref": { "id": 3496221429, "type": "ipv4" },
+              "sources": ["ETPRO Detailed IP Reputation", "ETPRO IP Reputation"],
+              "ticScore": 99,
+              "type": "ipv4"
+            }
+          ],
+          "totalHits": 1
+        },
+        "sources": {
+          "results": [
+            {
+              "firstSeen": 1644037687315,
+              "lastSeen": 1676484483434,
+              "meta": { "etproRiskScore_ui": 127 },
+              "sources": ["ETPRO IP Reputation"],
+              "ref": {
+                "type": "associated-with",
+                "right": { "type": "threat", "id": ":>g1&269cfSTKtu1v&8s" },
+                "left": { "type": "ipv4", "id": 3496221429 }
+              },
+              "right": {
+                "threatId": ":>g1&269cfSTKtu1v&8s",
+                "ticScore": 54,
+                "classifications": ["c2", "infrastructure"],
+                "name": "Malware Command and Control Server",
+                "ref": { "type": "threat", "id": ":>g1&269cfSTKtu1v&8s" }
+              },
+              "left": { "ref": { "type": "ipv4", "id": 3496221429 } }
+            },
+            {
+              "firstSeen": 1672272000000,
+              "lastSeen": 1676419200000,
+              "meta": { "etproRiskScore_ui": 127, "ports_UI": [80, 81, 442, 443, 446, 8000, 8080] },
+              "sources": ["ETPRO Detailed IP Reputation"],
+              "ref": {
+                "type": "associated-with",
+                "right": { "type": "threat", "id": "lF,Oh`=1hAeB>v]`IlRk" },
+                "left": { "type": "ipv4", "id": 3496221429 }
+              },
+              "right": {
+                "threatId": "lF,Oh`=1hAeB>v]`IlRk",
+                "ticScore": 54,
+                "classifications": ["c2", "infrastructure"],
+                "name": "Malware Command and Control Server",
+                "ref": { "type": "threat", "id": "lF,Oh`=1hAeB>v]`IlRk" }
+              },
+              "left": { "ref": { "type": "ipv4", "id": 3496221429 } }
+            },
+            {
+              "firstSeen": 1659114490819,
+              "lastSeen": 1676484483434,
+              "meta": { "etproRiskScore_ui": 122 },
+              "sources": ["ETPRO IP Reputation"],
+              "ref": {
+                "type": "associated-with",
+                "right": { "type": "threat", "id": "[Mn9I-RfG)aWWr=wvviD" },
+                "left": { "type": "ipv4", "id": 3496221429 }
+              },
+              "right": {
+                "threatId": "[Mn9I-RfG)aWWr=wvviD",
+                "ticScore": 49,
+                "classifications": ["mobile device", "c2", "malware", "infrastructure"],
+                "name": "Known CnC for Mobile specific Family",
+                "ref": { "type": "threat", "id": "[Mn9I-RfG)aWWr=wvviD" }
+              },
+              "left": { "ref": { "type": "ipv4", "id": 3496221429 } }
+            },
+            {
+              "firstSeen": 1676332800000,
+              "lastSeen": 1676332800000,
+              "meta": { "etproRiskScore_ui": 122, "ports_UI": [80] },
+              "sources": ["ETPRO Detailed IP Reputation"],
+              "ref": {
+                "type": "associated-with",
+                "right": { "type": "threat", "id": "d$wJK9CiK!_t+{(9C{XV" },
+                "left": { "type": "ipv4", "id": 3496221429 }
+              },
+              "right": {
+                "threatId": "d$wJK9CiK!_t+{(9C{XV",
+                "ticScore": 49,
+                "classifications": ["mobile device", "c2", "malware", "infrastructure"],
+                "name": "Known CnC for Mobile specific Family",
+                "ref": { "type": "threat", "id": "d$wJK9CiK!_t+{(9C{XV" }
+              },
+              "left": { "ref": { "type": "ipv4", "id": 3496221429 } }
+            },
+            {
+              "firstSeen": 1675487284321,
+              "lastSeen": 1676027283094,
+              "meta": { "etproRiskScore_ui": 25 },
+              "sources": ["ETPRO IP Reputation"],
+              "ref": {
+                "type": "associated-with",
+                "right": { "type": "threat", "id": "LNgV3jI_em[R]-tEuREn" },
+                "left": { "type": "ipv4", "id": 3496221429 }
+              },
+              "right": {
+                "threatId": "LNgV3jI_em[R]-tEuREn",
+                "ticScore": 49,
+                "classifications": ["c2", "infrastructure"],
+                "name": "Spyware Reporting Server",
+                "ref": { "type": "threat", "id": "LNgV3jI_em[R]-tEuREn" }
+              },
+              "left": { "ref": { "type": "ipv4", "id": 3496221429 } }
+            },
+            {
+              "firstSeen": 1666300093484,
+              "lastSeen": 1676484483434,
+              "meta": { "etproRiskScore_ui": 127 },
+              "sources": ["ETPRO IP Reputation"],
+              "ref": {
+                "type": "associated-with",
+                "right": { "type": "threat", "id": "lsKf/Y!xdcdKUBd`6tG%" },
+                "left": { "type": "ipv4", "id": 3496221429 }
+              },
+              "right": {
+                "threatId": "lsKf/Y!xdcdKUBd`6tG%",
+                "ticScore": 30,
+                "classifications": ["p2p", "communications", "infrastructure"],
+                "name": "P2P Node",
+                "ref": { "type": "threat", "id": "lsKf/Y!xdcdKUBd`6tG%" }
+              },
+              "left": { "ref": { "type": "ipv4", "id": 3496221429 } }
+            },
+            {
+              "firstSeen": 1644037687315,
+              "lastSeen": 1676484483434,
+              "meta": { "etproRiskScore_ui": 121 },
+              "sources": ["ETPRO IP Reputation"],
+              "ref": {
+                "type": "associated-with",
+                "right": { "type": "threat", "id": "0N=-1nXO(k]V{x0hEEI7" },
+                "left": { "type": "ipv4", "id": 3496221429 }
+              },
+              "right": {
+                "threatId": "0N=-1nXO(k]V{x0hEEI7",
+                "ticScore": 22,
+                "classifications": ["malicious", "infrastructure", "top-level domain registrars"],
+                "name": "Abused or free TLD Related",
+                "ref": { "type": "threat", "id": "0N=-1nXO(k]V{x0hEEI7" }
+              },
+              "left": { "ref": { "type": "ipv4", "id": 3496221429 } }
+            },
+            {
+              "firstSeen": 1675987200000,
+              "lastSeen": 1676246400000,
+              "meta": { "etproRiskScore_ui": 121, "ports_UI": [80, 443] },
+              "sources": ["ETPRO Detailed IP Reputation"],
+              "ref": {
+                "type": "associated-with",
+                "right": { "type": "threat", "id": "M`_R4S.4L`PHg.wY)sW/" },
+                "left": { "type": "ipv4", "id": 3496221429 }
+              },
+              "right": {
+                "threatId": "M`_R4S.4L`PHg.wY)sW/",
+                "ticScore": 22,
+                "classifications": ["malicious", "infrastructure", "top-level domain registrars"],
+                "name": "Abused or free TLD Related",
+                "ref": { "type": "threat", "id": "M`_R4S.4L`PHg.wY)sW/" }
+              },
+              "left": { "ref": { "type": "ipv4", "id": 3496221429 } }
+            }
+          ]
+        }
+      },
+      "summary": []
+    }
+  },
+  "msg": "lookupResult in onDetails",
+  "time": "2023-02-15T18:27:28.825Z",
+  "v": 0
+}
