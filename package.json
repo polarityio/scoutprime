@@ -1,6 +1,6 @@
 {
   "name": "ScoutPrime",
-  "version": "1.1.1-beta",
+  "version": "1.1.2-beta",
   "main": "./integration.js",
   "description": "LookingGlass Scout Prime integration",
   "private": true,
