@@ -1,0 +1,100 @@
+{
+  "polarityIntegrationUuid": "b974c960-cce1-11ed-aeee-075d3490155d",
+  "name": "ScoutPrime",
+  "acronym": "SP",
+  "defaultColor": "light-blue",
+  "logging": {
+    "level": "debug"
+  },
+  "entityTypes": ["IPv4", "domain"],
+  "customTypes": [
+    {
+      "key": "cidr",
+      "regex": "((25[0-5]|2[0-4]\\d|1\\d\\d|[1-9]?\\d)\\.){3}(25[0-5]|2[0-4]\\d|1\\d\\d|[1-9]?\\d)\\/(3[0-2]|[1-2]?[0-9])",
+      "isCaseSensitive": true,
+      "isGlobal": true
+    }
+  ],
+  "styles": ["./styles/scprime.less"],
+  "block": {
+    "component": {
+      "file": "./components/scprime.js"
+    },
+    "template": {
+      "file": "./templates/scprime.hbs"
+    }
+  },
+  "request": {
+    "cert": "",
+    "key": "",
+    "passphrase": "",
+    "ca": "",
+    "proxy": "",
+    "rejectUnauthorized": true
+  },
+  "options": [
+    {
+      "key": "url",
+      "name": "Scout Prime URL",
+      "description": "URL for Scout Prime",
+      "default": "",
+      "type": "text",
+      "userCanEdit": true,
+      "adminOnly": true
+    },
+    {
+      "key": "username",
+      "name": "User Name",
+      "description": "User Name for Scout Prime",
+      "default": "",
+      "type": "text",
+      "userCanEdit": true,
+      "adminOnly": false
+    },
+    {
+      "key": "password",
+      "name": "Password",
+      "description": "Password for your login to Scout Prime",
+      "default": "",
+      "type": "password",
+      "userCanEdit": true,
+      "adminOnly": false
+    },
+    {
+      "key": "tic",
+      "name": "Minimum TIC Score",
+      "description": "Minimum TIC Score to be notified on, values range from 0-100",
+      "default": "0",
+      "type": "text",
+      "userCanEdit": true,
+      "adminOnly": false
+    },
+    {
+      "key": "lookupIp",
+      "name": "Lookup IPv4 Addresses",
+      "description": "If checked, the integration will lookup IPv4 addresses in Scout Prime",
+      "default": true,
+      "type": "boolean",
+      "userCanEdit": true,
+      "adminOnly": false
+    },
+    {
+      "key": "lookupCidr",
+      "name": "Lookup CIDRs",
+      "description": "If checked, the integration will lookup CIDRs in Scout Prime",
+      "default": true,
+      "type": "boolean",
+      "userCanEdit": true,
+      "adminOnly": false
+    },
+    {
+      "key": "lookupFqdn",
+      "name": "Lookup Fully Qualified Domain Names",
+      "description": "If checked, the integration will lookup FQDNs in Scout Prime",
+      "default": true,
+      "type": "boolean",
+      "userCanEdit": true,
+      "adminOnly": false
+    }
+  ]
+}
