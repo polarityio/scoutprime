@@ -1,7 +1,7 @@
 'use strict';
 
 const { polarityRequest } = require('./src/polarity-request');
-const { getDns, getAssociations, getOwners, getWhois } = require('./src/get-dns');
+const { getDns, getAssociations, getOwners, getWhois } = require('./src/queries');
 const { setLogger, getLogger } = require('./src/logger');
 const { PolarityResult } = require('./src/create-result-object');
 const { map } = require('lodash/fp');
