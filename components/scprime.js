@@ -58,15 +58,15 @@ polarity.export = PolarityComponent.extend({
   threatStrokeWidth: 2,
   elementRadius: 20,
   elementStrokeWidth: 4,
-  elementColor: Ember.computed('details.ticScore', function () {
-    return this._getThreatColor(this.get('details.ticScore'));
+  elementColor: Ember.computed('ticScore', function () {
+    return this._getThreatColor(this.get('ticScore'));
   }),
   elementStrokeOffset: Ember.computed(
-    'details.ticScore',
+    'ticScore',
     'elementCircumference',
     function () {
       return this._getStrokeOffset(
-        this.get('details.ticScore'),
+        this.get('ticScore'),
         this.get('elementCircumference')
       );
     }
