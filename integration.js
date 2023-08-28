@@ -1,7 +1,7 @@
 'use strict';
 
 const { polarityRequest } = require('./src/polarity-request');
-const { getDns, getAssociations, getOwners, getWhois } = require('./src/queries');
+const { getAssociations, getOwners, getWhois } = require('./src/queries');
 const { setLogger, getLogger } = require('./src/logger');
 const { PolarityResult } = require('./src/create-result-object');
 const { map } = require('lodash/fp');
@@ -26,12 +26,12 @@ async function doLookup(entities, options, cb) {
 
     const lookupResults = await Promise.all(
       map(async (entity) => {
-        const dns = await getDns(entity);
+        // const dns = await getDns(entity);
         const associations = await getAssociations(entity);
         const whois = await getWhois(entity);
         const owners = await getOwners(entity);
 
-        const responses = { entity, associations, owners, whois, dns };
+        const responses = { entity, associations, owners, whois };
         return polarityResult.createResultsObject(responses);
       }, entities)
     );

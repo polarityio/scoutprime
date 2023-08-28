@@ -11,22 +11,22 @@ function transformType(entity) {
   }
 }
 //TODO: need to fix case of domains causing the integration timeout.
-async function getDns(entity) {
-  const Logger = getLogger();
+// async function getDns(entity) {
+//   const Logger = getLogger();
 
-  const response = await polarityRequest.send({
-    entity,
-    method: 'POST',
-    path: `api/elements/dns-history`,
-    body: {
-      params: { name: entity.value, type: transformType(entity), limit: 10 } // change this
-    },
-    json: true
-  });
+//   const response = await polarityRequest.send({
+//     entity,
+//     method: 'POST',
+//     path: `api/elements/dns-history`,
+//     body: {
+//       params: { name: entity.value, type: transformType(entity), limit: 10 } // change this
+//     },
+//     json: true
+//   });
 
-  Logger.trace({ response }, 'getDns Response from Scout Prime');
-  return response[0].result.body;
-}
+//   Logger.trace({ response }, 'getDns Response from Scout Prime');
+//   return response[0].result.body;
+// }
 
 async function getAssociations(entity) {
   const Logger = getLogger();
@@ -119,4 +119,4 @@ async function getOwners(entity) {
   return response[0].result.body;
 }
 
-module.exports = { getAssociations, getDns, getOwners, getWhois };
+module.exports = { getAssociations, getOwners, getWhois };
