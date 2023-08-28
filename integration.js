@@ -48,13 +48,14 @@ async function doLookup(entities, options, cb) {
 function validateOptions(userOptions, cb) {
   const requiredFields = [
     { key: 'url', message: 'You must provide a valid URL' },
-    { key: 'apiKey', message: 'You must provide a valid ScoutPrime API Key' },
-    { key: 'username', message: 'You must provide a valid ScoutPrime User Name' },
-    { key: 'password', message: 'You must provide a valid ScoutPrime Password' }
+    { key: 'apiKey', message: 'You must provide a valid ScoutPrime API Key' }
   ];
 
   const errors = requiredFields.reduce((acc, { key, message }) => {
-    if (typeof userOptions[key].value !== 'string' || userOptions[key].value.length === 0) {
+    if (
+      typeof userOptions[key].value !== 'string' ||
+      userOptions[key].value.length === 0
+    ) {
       acc.push({ key, message });
     }
     return acc;

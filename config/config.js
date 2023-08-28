@@ -52,24 +52,6 @@ module.exports = {
       type: 'password',
       userCanEdit: true,
       adminOnly: true
-    },
-    {
-      key: 'username',
-      name: 'ScoutPrime User Name',
-      description: 'User Name for Scout Prime',
-      default: '',
-      type: 'text',
-      userCanEdit: true,
-      adminOnly: false
-    },
-    {
-      key: 'password',
-      name: 'ScoutPrime Password',
-      description: 'Password for your login to Scout Prime',
-      default: '',
-      type: 'password',
-      userCanEdit: true,
-      adminOnly: false
     }
   ]
 };
