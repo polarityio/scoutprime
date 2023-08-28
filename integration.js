@@ -54,7 +54,7 @@ function validateOptions(userOptions, cb) {
   ];
 
   const errors = requiredFields.reduce((acc, { key, message }) => {
-    if (typeof userOptions[key] !== 'string' || userOptions[key].length === 0) {
+    if (typeof userOptions[key].value !== 'string' || userOptions[key].value.length === 0) {
       acc.push({ key, message });
     }
     return acc;
