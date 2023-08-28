@@ -7,12 +7,10 @@ polarity.export = PolarityComponent.extend({
   showLocations: false,
   showWhoIs: false,
   dnsHistory: Ember.computed('block.data.details', function () {
-    const dns = this.get('block.data.details.dns').result['dns-history'];
-    return dns;
-  }),
-  dnsHistoryTotalCount: Ember.computed('block.data.details', function () {
-    const dns = this.get('block.data.details.dns').result['dns-history'];
-    return dns;
+    const dns = this.get('block.data.details.dns.result');
+    if (dns) {
+      return dns['dns-history'];
+    }
   }),
   associations: Ember.computed('block.data.details', function () {
     const associations = this.get('block.data.details.associations').results;
