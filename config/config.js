@@ -15,16 +15,7 @@ module.exports = {
     proxy: ''
   },
   logging: { level: 'trace' },
-  entityTypes: ['IPv4', 'domain'],
-  customTypes: [
-    {
-      key: 'cidr',
-      regex:
-        /((25[0-5]|2[0-4]\d|1\d\d|[1-9]?\d)\.){3}(25[0-5]|2[0-4]\d|1\d\d|[1-9]?\d)\/(3[0-2]|[1-2]?[0-9])/,
-      isCaseSensitive: true,
-      isGlobal: true
-    }
-  ],
+  entityTypes: ['IPv4', 'domain', 'IPv4CIDR'],
   styles: ['./styles/scprime.less'],
   block: {
     component: {

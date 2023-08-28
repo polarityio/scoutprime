@@ -9,6 +9,10 @@ function transformType(entity) {
   if (entity.type === 'domain') {
     return 'fqdn';
   }
+
+  if (entity.type === 'IPv4CIDR') {
+    return 'cidrv4';
+  }
 }
 //TODO: need to fix case of domains causing the integration timeout.
 // async function getDns(entity) {
