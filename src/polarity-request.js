@@ -145,6 +145,7 @@ class PolarityRequest {
             )
           );
         }
+
         if (statusCode === HTTP_CODE_NOT_FOUND_404) {
           return resolve({ ...response, requestOptions });
         }
@@ -179,7 +180,6 @@ class PolarityRequest {
 
   async runRequestsInParallel(requestOptions, limit = 10) {
     const Logger = getLogger();
-    // const unexecutedRequestFunctions = [];
 
     Logger.trace({ requestOptions }, 'Request Options (before request)');
 

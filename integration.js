@@ -11,8 +11,6 @@ function startup(logger) {
   setLogger(logger);
 }
 
-//TODO: Add CIDR support,  fix dns history.
-
 async function doLookup(entities, options, cb) {
   const Logger = getLogger();
 

@@ -144,79 +144,77 @@
       </div>
       {{! end ownership }}
 
-      {{! Location information }}
-      <div class='locations-toggle' onclick={{action 'toggleLocations'}}>
-        <div class='toggle-content'>
-          <span class='toggle-text'>Locations</span>
-          {{#if showLocations}}
-            <span class='toggle-icon'>{{fa-icon 'angle-up'}}</span>
-          {{else}}
-            <span class='toggle-icon'>{{fa-icon 'angle-down'}}</span>
-          {{/if}}
-        </div>
-      </div>
-      {{#if showLocations}}
-        <div class='data-container'>
-          {{#each owners as |owner|}}
-            {{! Address information }}
-            {{#if owner.locations}}
-              {{#each owner.locations as |location|}}
-                <div class='card'>
-                  <div class='card-item'>
-                    <span>City:</span>
-                    <span>{{location.city}}</span>
-                  </div>
-                  <div class='card-item'>
-                    <span>Country:</span>
-                    <span>{{location.country}}</span>
-                  </div>
-                  <div class='card-item'>
-                    <span>Region:</span>
-                    <span>{{location.region}}</span>
-                  </div>
-                  <div class='card-item'>
-                    <span>Country Name:</span>
-                    <span>{{location.countryName}}</span>
-                  </div>
-                  <div class='card-item'>
-                    <span>Country Digit:</span>
-                    <span>{{location.country2Digit}}</span>
-                  </div>
-                  <div class='card-item'>
-                    <span>Last Seen:</span>
-                    <span>{{moment-format
-                        location.lastSeen
-                        'YYYY-MM-DD HH:mm:ss z'
-                        timeZone=timezone
-                      }}</span>
-                  </div>
-                </div>
-              {{/each}}
+      {{#if owners}}
+        {{! Location information }}
+        <div class='locations-toggle' onclick={{action 'toggleLocations'}}>
+          <div class='toggle-content'>
+            <span class='toggle-text'>Locations</span>
+            {{#if showLocations}}
+              <span class='toggle-icon'>{{fa-icon 'angle-up'}}</span>
             {{else}}
-              <div>
-                <span class='p-key'>No Location Information</span>
-              </div>
+              <span class='toggle-icon'>{{fa-icon 'angle-down'}}</span>
             {{/if}}
-          {{/each}}
+          </div>
         </div>
+        {{#if showLocations}}
+          <div class='data-container'>
+            {{#each owners as |owner|}}
+              {{! Address information }}
+              {{#if owner.locations}}
+                {{#each owner.locations as |location|}}
+                  <div class='card'>
+                    <div class='card-item'>
+                      <span>City:</span>
+                      <span>{{location.city}}</span>
+                    </div>
+                    <div class='card-item'>
+                      <span>Country:</span>
+                      <span>{{location.country}}</span>
+                    </div>
+                    <div class='card-item'>
+                      <span>Region:</span>
+                      <span>{{location.region}}</span>
+                    </div>
+                    <div class='card-item'>
+                      <span>Country Name:</span>
+                      <span>{{location.countryName}}</span>
+                    </div>
+                    <div class='card-item'>
+                      <span>Country Digit:</span>
+                      <span>{{location.country2Digit}}</span>
+                    </div>
+                    <div class='card-item'>
+                      <span>Last Seen:</span>
+                      <span>{{moment-format
+                          location.lastSeen
+                          'YYYY-MM-DD HH:mm:ss z'
+                          timeZone=timezone
+                        }}</span>
+                    </div>
+                  </div>
+                {{/each}}
+              {{/if}}
+            {{/each}}
+          </div>
+        {{/if}}
       {{/if}}
       {{! End of locations }}
 
       {{! whois information }}
-      <div class='locations-toggle' onclick={{action 'toggleWhoIs'}}>
-        <div class='toggle-content'>
-          <span class='toggle-text'>WhoIs</span>
-          {{#if showWhoIs}}
-            <span class='toggle-icon'>{{fa-icon 'angle-up'}}</span>
-          {{else}}
-            <span class='toggle-icon'>{{fa-icon 'angle-down'}}</span>
-          {{/if}}
+      {{#if (or whoIsRecord whoIsRegistrant)}}
+        <div class='locations-toggle' onclick={{action 'toggleWhoIs'}}>
+          <div class='toggle-content'>
+            <span class='toggle-text'>WhoIs</span>
+            {{#if showWhoIs}}
+              <span class='toggle-icon'>{{fa-icon 'angle-up'}}</span>
+            {{else}}
+              <span class='toggle-icon'>{{fa-icon 'angle-down'}}</span>
+            {{/if}}
+          </div>
         </div>
-      </div>
-      {{#if showWhoIs}}
-        <div class='data-container'>
-          {{! whois information }}
-          {{#if (or whoIsRecord whoIsRegistrant)}}
+        {{#if showWhoIs}}
+          <div class='data-container'>
+            {{! whois information }}
             <div class='card'>
               {{#if (get whoIsRecord 'registrar-name')}}
                 <div class='card-item'>
@@ -279,85 +277,83 @@
                 </div>
               {{/if}}
             </div>
-          {{else}}
-            <div>
-              <span class='p-key'>No WhoIs Information</span>
-            </div>
-          {{/if}}
-          {{! end of whois information }}
-        </div>
+            {{! end of whois information }}
+          </div>
+        {{/if}}
       {{/if}}
       {{! End of whois}}
 
       {{! dns  }}
-      <div class='locations-toggle' onclick={{action 'toggleDnsHistory'}}>
-        <div class='toggle-content'>
-          <span class='toggle-text'>DNS History</span>
-          <span class='toggle-text'>Showing
-            {{dnsHistory.length}}
-            of
-            {{get details.dns.summary 'total-results'}}
-            results</span>
-          {{#if toggleDnsHistory}}
-            <span class='toggle-icon'>{{fa-icon 'angle-up'}}</span>
-          {{else}}
-            <span class='toggle-icon'>{{fa-icon 'angle-down'}}</span>
-          {{/if}}
+      {{#if dnsHistory}}
+        <div class='locations-toggle' onclick={{action 'toggleDnsHistory'}}>
+          <div class='toggle-content'>
+            <span class='toggle-text'>DNS History</span>
+            <span class='toggle-text'>Showing
+              {{dnsHistory.length}}
+              of
+              {{get details.dns.summary 'total-results'}}
+              results</span>
+            {{#if toggleDnsHistory}}
+              <span class='toggle-icon'>{{fa-icon 'angle-up'}}</span>
+            {{else}}
+              <span class='toggle-icon'>{{fa-icon 'angle-down'}}</span>
+            {{/if}}
+          </div>
         </div>
-      </div>
-      {{#if toggleDnsHistory}}
-        <span class='dns-link'>
-          <a
-            href='https://pov.sp.lookingglasscyber.com/search/basic/{{block.entity.value}}'
-          >View DNS History in ScoutPrime
-            {{fa-icon 'external-link' class='external-link-icon'}}</a>
-        </span>
-        <div class='dns-history'>
-          {{! dns information }}
-          {{#each dnsHistory as |listing|}}
-            <div class='dns-history-info'>
-              <div>
-                <span class='p-key'>Tic Score:</span>
-                <span class='p-value'>{{get listing 'tic-score'}}</span>
+        {{#if toggleDnsHistory}}
+          <span class='dns-link'>
+            <a
+              href='https://pov.sp.lookingglasscyber.com/search/basic/{{block.entity.value}}'
+            >View DNS History in ScoutPrime
+              {{fa-icon 'external-link' class='external-link-icon'}}</a>
+          </span>
+          <div class='dns-history'>
+            {{! dns information }}
+            {{#each dnsHistory as |listing|}}
+              <div class='dns-history-info'>
+                <div>
+                  <span class='p-key'>Tic Score:</span>
+                  <span class='p-value'>{{get listing 'tic-score'}}</span>
+                </div>
+                <div>
+                  <span class='p-key'>DNS Type:</span>
+                  <span class='p-value'>{{get listing 'dns-type'}}</span>
+                </div>
+                <div>
+                  <span class='p-key'>FQDN:</span>
+                  <span class='p-value'>{{listing.fqdn}}</span>
+                </div>
+                <div>
+                  <span class='p-key'>Count:</span>
+                  <span class='p-value'>{{listing.count}}</span>
+                </div>
+                <div>
+                  <span class='p-key'>FQDN:</span>
+                  <span class='p-value'>{{listing.ipv4}}</span>
+                </div>
+                <div>
+                  <span class='p-key'>Time Fist:</span>
+                  <span class='p-value'>{{moment-format
+                      (get listing 'time-first')
+                      'YYYY-MM-DD HH:mm:ss z'
+                      timeZone=timezone
+                    }}
+                  </span>
+                </div>
+                <div>
+                  <span class='p-key'>Time Last:</span>
+                  <span class='p-value'>{{moment-format
+                      (get listing 'time-last')
+                      'YYYY-MM-DD HH:mm:ss z'
+                      timeZone=timezone
+                    }}
+                  </span>
+                </div>
               </div>
-              <div>
-                <span class='p-key'>DNS Type:</span>
-                <span class='p-value'>{{get listing 'dns-type'}}</span>
-              </div>
-              <div>
-                <span class='p-key'>FQDN:</span>
-                <span class='p-value'>{{listing.fqdn}}</span>
-              </div>
-              <div>
-                <span class='p-key'>Count:</span>
-                <span class='p-value'>{{listing.count}}</span>
-              </div>
-              <div>
-                <span class='p-key'>FQDN:</span>
-                <span class='p-value'>{{listing.ipv4}}</span>
-              </div>
-              <div>
-                <span class='p-key'>Time Fist:</span>
-                <span class='p-value'>{{moment-format
-                    (get listing 'time-first')
-                    'YYYY-MM-DD HH:mm:ss z'
-                    timeZone=timezone
-                  }}
-                </span>
-              </div>
-              <div>
-                <span class='p-key'>Time Last:</span>
-                <span class='p-value'>{{moment-format
-                    (get listing 'time-last')
-                    'YYYY-MM-DD HH:mm:ss z'
-                    timeZone=timezone
-                  }}
-                </span>
-              </div>
-            </div>
-          {{/each}}
-          {{! end of dns information }}
-        </div>
+            {{/each}}
+            {{! end of dns information }}
+          </div>
+        {{/if}}
       {{/if}}
       {{! End of dns}}
     </div>
