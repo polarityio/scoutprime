@@ -1,6 +1,10 @@
 'use strict';
 polarity.export = PolarityComponent.extend({
   details: Ember.computed.alias('block.data.details'),
+  owners: Ember.computed.alias('block.data.details.owners'),
+  associations: Ember.computed.alias('block.data.details.associations.results'),
+  whoisRecord: Ember.computed.alias('block.data.details.whois.result.whois-record.registry-data'),
+  whoisRegistrant: Ember.computed.alias('block.data.details.whois.result.whois-record.registry-data.registrant'),
   timezone: Ember.computed('Intl', function () {
     return Intl.DateTimeFormat().resolvedOptions().timeZone;
   }),
