@@ -18,14 +18,16 @@
             Collections
           </div>
         </div>
-        <div class="header-item">
-          <div class="header-value">
-            {{moment-from-now lastActivityAt timeZone=timezone}}
+        {{#if (gt associations.length 0)}}
+          <div class="header-item">
+            <div class="header-value">
+              {{moment-from-now lastActivityAt timeZone=timezone}}
+            </div>
+            <div class="header-key">
+              Last Activity
+            </div>
           </div>
-          <div class="header-key">
-            Last Activity
-          </div>
-        </div>
+        {{/if}}
       </div>
       <div>
         <div class="indicator">
