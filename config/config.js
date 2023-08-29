@@ -41,8 +41,8 @@ module.exports = {
     },
     {
       key: 'apiKey',
-      name: 'scoutPRIME API Key',
-      description: 'A valid scoutPRIME API Key',
+      name: 'scoutPRIME API Token',
+      description: 'A valid scoutPRIME API Token',
       default: '',
       type: 'password',
       userCanEdit: true,
