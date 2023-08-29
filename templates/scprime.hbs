@@ -15,7 +15,7 @@
             {{collections.length}}
           </div>
           <div class="header-key">
-            Collections
+            {{pluralize collections.length "Collection" without-count=true}}
           </div>
         </div>
         {{#if (gt associations.length 0)}}
