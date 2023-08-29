@@ -1,6 +1,10 @@
 module.exports = {
-  name: 'ScoutPrime',
+  name: 'scoutPRIME',
   acronym: 'SP',
+  description:
+    'Search LookingGlass scoutPRIME for information about IP addresses, domains and CIDR blocks.',
+  onDemandOnly: true,
+  defaultColor: 'light-gray',
   request: {
     // Provide the path to your certFile. Leave an empty string to ignore this option.
     cert: '',
@@ -14,7 +18,7 @@ module.exports = {
     // the url parameter (by embedding the auth info in the uri)
     proxy: ''
   },
-  logging: { level: 'trace' },
+  logging: { level: 'info' },
   entityTypes: ['IPv4', 'domain', 'IPv4CIDR'],
   styles: ['./styles/scprime.less'],
   block: {
@@ -28,17 +32,17 @@ module.exports = {
   options: [
     {
       key: 'url',
-      name: 'ScoutPrime URL',
-      description: 'URL for ScoutPrime',
-      default: 'https://pov.sp.lookingglasscyber.com',
+      name: 'scoutPRIME URL',
+      description: 'URL for scoutPRIME including scheme (i.e., https://)',
+      default: '',
       type: 'text',
       userCanEdit: true,
       adminOnly: true
     },
     {
       key: 'apiKey',
-      name: 'Scout Prime API Key',
-      description: 'URL for Scout Prime',
+      name: 'scoutPRIME API Key',
+      description: 'A valid scoutPRIME API Key',
       default: '',
       type: 'password',
       userCanEdit: true,
