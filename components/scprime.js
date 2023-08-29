@@ -17,7 +17,7 @@ polarity.export = PolarityComponent.extend({
   yellowThreat: '#ffc15d',
   showLocations: false,
   showWhois: false,
-  hasLocationData: Ember.computed('block.data.details.owners.[]', function(){
+  hasLocationData: Ember.computed('block.data.details.owners.[]', function () {
     const owners = this.get('block.data.details.owners');
     return owners.some((owner) => {
       return owner.locations && owner.locations.length > 0;
@@ -109,40 +109,6 @@ polarity.export = PolarityComponent.extend({
       return this.get('yellowThreat');
     } else {
       return this.get('greenThreat');
-    }
-  },
-  _convertToHumanReadable(string) {
-    let newString = '';
-    // handle known edge cases
-    if (string === 'hashs') {
-      return 'Hashes';
-    }
-
-    string = string.replace(/hashs/gi, 'hashes');
-    string = string.replace(/md5s/gi, 'MD5');
-    string = string.replace(/sha(\d+)s/gi, 'SHA-$1');
-
-    for (let i = 0; i < string.length; i++) {
-      if (i === 0) {
-        newString += string[i].toUpperCase();
-      } else if (string[i] === '-') {
-        newString += ' ';
-      } else {
-        newString += string[i];
-      }
-    }
-    return newString;
-  },
-  _getType(value, attribute) {
-    // handle date attributes in a special manner
-    if (attribute === 'last-seen' || attribute === 'first-seen') {
-      return 'date';
-    }
-
-    if (Array.isArray(value)) {
-      return 'array';
-    } else {
-      return 'string';
     }
   }
 });
