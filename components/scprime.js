@@ -1,11 +1,26 @@
 'use strict';
 polarity.export = PolarityComponent.extend({
   details: Ember.computed.alias('block.data.details'),
+  timezone: Ember.computed('Intl', function () {
+    return Intl.DateTimeFormat().resolvedOptions().timeZone;
+  }),
   redThreat: '#fa5843',
   greenThreat: '#7dd21b',
   yellowThreat: '#ffc15d',
   showLocations: false,
   showWhoIs: false,
+  lastActivityAt: Ember.computed(
+    'block.data.details.associations.results.[]',
+    function () {
+      const numResults = this.get('block.data.details.associations.results.length');
+      // associations are sorted from oldest to most recent.  To get the most recent association
+      // we find the last record in the array.
+      const lastActivityAt = this.get(
+        `block.data.details.associations.results.${numResults - 1}.lastSeen`
+      );
+      return lastActivityAt;
+    }
+  ),
   dnsHistory: Ember.computed('block.data.details', function () {
     const dns = this.get('block.data.details.dns.result');
     if (dns) {
@@ -42,6 +57,14 @@ polarity.export = PolarityComponent.extend({
 
     return totalTicScore;
   }),
+  collections: Ember.computed('block.data.details', function () {
+    const owners = this.get('block.data.details.owners');
+
+    return owners.reduce((acc, owner) => {
+      acc = acc.concat(owner.collections);
+      return acc;
+    }, []);
+  }),
   name: Ember.computed('block.data.details', function () {
     const owners = this.get('block.data.details.owners');
 
@@ -61,16 +84,9 @@ polarity.export = PolarityComponent.extend({
   elementColor: Ember.computed('ticScore', function () {
     return this._getThreatColor(this.get('ticScore'));
   }),
-  elementStrokeOffset: Ember.computed(
-    'ticScore',
-    'elementCircumference',
-    function () {
-      return this._getStrokeOffset(
-        this.get('ticScore'),
-        this.get('elementCircumference')
-      );
-    }
-  ),
+  elementStrokeOffset: Ember.computed('ticScore', 'elementCircumference', function () {
+    return this._getStrokeOffset(this.get('ticScore'), this.get('elementCircumference'));
+  }),
   //   threats: Ember.computed('details.threats', function () {
   //     let self = this;
   //     let threats = Ember.A();
