@@ -17,6 +17,12 @@ polarity.export = PolarityComponent.extend({
   yellowThreat: '#ffc15d',
   showLocations: false,
   showWhois: false,
+  hasLocationData: Ember.computed('block.data.details.owners.[]', function(){
+    const owners = this.get('block.data.details.owners');
+    return owners.some((owner) => {
+      return owner.locations && owner.locations.length > 0;
+    });
+  }),
   lastActivityAt: Ember.computed(
     'block.data.details.associations.results.[]',
     function () {

@@ -184,7 +184,7 @@
       </div>
       {{! end ownership }}
 
-      {{#if owners}}
+      {{#if hasLocationData}}
         {{! Location information }}
         <div class="locations-toggle {{if showLocations "open"}}" onclick={{action "toggleLocations"}}>
           <div class="toggle-content">
