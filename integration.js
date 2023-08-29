@@ -12,6 +12,8 @@ function startup(logger) {
 }
 
 async function doLookup(entities, options, cb) {
+  options.url = options.url.endsWith('/') ? options.url.slice(0, -1) : options.url;
+
   const Logger = getLogger();
 
   Logger.trace({ entities }, 'Entities');
