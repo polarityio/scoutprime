@@ -3,8 +3,12 @@ polarity.export = PolarityComponent.extend({
   details: Ember.computed.alias('block.data.details'),
   owners: Ember.computed.alias('block.data.details.owners'),
   associations: Ember.computed.alias('block.data.details.associations.results'),
-  whoisRecord: Ember.computed.alias('block.data.details.whois.result.whois-record.registry-data'),
-  whoisRegistrant: Ember.computed.alias('block.data.details.whois.result.whois-record.registry-data.registrant'),
+  whoisRecord: Ember.computed.alias(
+    'block.data.details.whois.result.whois-record.registry-data'
+  ),
+  whoisRegistrant: Ember.computed.alias(
+    'block.data.details.whois.result.whois-record.registry-data.registrant'
+  ),
   timezone: Ember.computed('Intl', function () {
     return Intl.DateTimeFormat().resolvedOptions().timeZone;
   }),
@@ -12,7 +16,7 @@ polarity.export = PolarityComponent.extend({
   greenThreat: '#7dd21b',
   yellowThreat: '#ffc15d',
   showLocations: false,
-  showWhoIs: false,
+  showWhois: false,
   lastActivityAt: Ember.computed(
     'block.data.details.associations.results.[]',
     function () {
@@ -30,26 +34,6 @@ polarity.export = PolarityComponent.extend({
     if (dns) {
       return dns['dns-history'];
     }
-  }),
-  associations: Ember.computed('block.data.details', function () {
-    const associations = this.get('block.data.details.associations').results;
-    return associations;
-  }),
-  whoIsRecord: Ember.computed('block.data.details', function () {
-    const whois = this.get('block.data.details.whois.result')['whois-record'][
-      'registry-data'
-    ];
-    return whois;
-  }),
-  whoIsRegistrant: Ember.computed('block.data.details', function () {
-    const whois = this.get('block.data.details.whois.result')['whois-record'][
-      'registry-data'
-    ]['registrant'];
-    return whois;
-  }),
-  owners: Ember.computed('block.data.details', function () {
-    const owners = this.get('block.data.details.owners');
-    return owners;
   }),
   ticScore: Ember.computed('block.data.details', function () {
     const owners = this.get('block.data.details.owners');
@@ -91,73 +75,6 @@ polarity.export = PolarityComponent.extend({
   elementStrokeOffset: Ember.computed('ticScore', 'elementCircumference', function () {
     return this._getStrokeOffset(this.get('ticScore'), this.get('elementCircumference'));
   }),
-  //   threats: Ember.computed('details.threats', function () {
-  //     let self = this;
-  //     let threats = Ember.A();
-
-  //     this.get('details.threats').forEach(function (threat) {
-  //       let enrichedThreat = {};
-  //       let ticScore = threat['influence-score'];
-
-  //       enrichedThreat.color = self._getThreatColor(ticScore);
-  //       enrichedThreat.strokeOffset = self._getStrokeOffset(
-  //         ticScore,
-  //         self.get('threatCircumference')
-  //       );
-  //       enrichedThreat.ticScore = ticScore;
-  //       enrichedThreat.name = threat['name'];
-
-  //       // We treat these two keys in a special way to ensure they always appear as the last
-  //       // two attributes for a threat.
-  //       let firstSeen = threat['first-seen'];
-  //       let lastSeen = threat['observed-at'];
-
-  //       delete threat['name'];
-  //       delete threat['first-seen'];
-  //       delete threat['observed-at'];
-  //       delete threat['influence-score'];
-  //       delete threat['file'];
-  //       delete threat['type'];
-
-  //       enrichedThreat.attributes = [];
-  //       let rowArray = [];
-  //       let keys = Object.keys(threat);
-
-  //       if (firstSeen) {
-  //         keys.push('first-seen');
-  //       }
-
-  //       if (lastSeen) {
-  //         keys.push('last-seen');
-  //       }
-
-  //       threat['first-seen'] = firstSeen;
-  //       threat['last-seen'] = lastSeen;
-
-  //       for (let i = 0; i < keys.length; i++) {
-  //         let key = keys[i];
-
-  //         rowArray.push({
-  //           type: self._getType(threat[key], key),
-  //           title: self._convertToHumanReadable(key),
-  //           value: threat[key]
-  //         });
-
-  //         if (rowArray.length === 2) {
-  //           enrichedThreat.attributes.push(rowArray);
-  //           rowArray = [];
-  //         }
-  //       }
-
-  //       if (rowArray.length > 0) {
-  //         enrichedThreat.attributes.push(rowArray);
-  //       }
-
-  //       threats.push(enrichedThreat);
-  //     });
-
-  //     return threats;
-  //   }),
   threatCircumference: Ember.computed('threatRadius', function () {
     return 2 * Math.PI * this.get('threatRadius');
   }),
@@ -168,8 +85,8 @@ polarity.export = PolarityComponent.extend({
     toggleLocations: function () {
       this.toggleProperty('showLocations');
     },
-    toggleWhoIs: function () {
-      this.toggleProperty('showWhoIs');
+    toggleWhois: function () {
+      this.toggleProperty('showWhois');
     },
     toggleDnsHistory: function () {
       this.toggleProperty('toggleDnsHistory');

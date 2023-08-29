@@ -1,111 +1,137 @@
-<div class='container-fluid'>
-  <div class='element-container'>
-    <div class='title'>
-      <h1>
-        {{name}}
-      </h1>
-    </div>
-    <div class='indicator'>
-      <div class='tic-gauge-container'>
-        <svg x='0' y='0' width='100%' height='100%' viewBox='0 0 55 50'>
-          <g transform='translate(28,25)'>
-            <g>
-              <circle
-                r='{{elementRadius}}'
-                stroke='#eee'
-                transform='rotate(-90)'
-                fill='#fff'
-                stroke-width='{{elementStrokeWidth}}'
-                cx='0'
-                cy='0'
-              ></circle>
-              {{! this is the inner circle }}
-              {{! stroke=<color> is the inner circle color }}
-              <circle
-                stroke-dasharray='{{elementCircumference}}'
-                r='{{elementRadius}}'
-                stroke='{{elementColor}}'
-                transform='rotate(-90)'
-                fill='none'
-                stroke-dashoffset='{{elementStrokeOffset}}'
-                stroke-width='{{elementStrokeWidth}}'
-                cx='0'
-                cy='0'
-              ></circle>
-              <text
-                text-anchor='middle'
-                x='0'
-                y='5'
-                fill='{{elementColor}}'
-                font-size='13'
-              >{{ticScore}}</text>
-            </g>
-          </g>
-        </svg>
+<div class="container-fluid">
+  <div class="header">
+    <div class="d-flex flex-row justify-content-between align-items-center w-100">
+      <div class="d-flex flex-row justify-content-between align-items-top">
+        <div class="header-item">
+          <div class="header-value">
+            {{associations.length}}
+          </div>
+          <div class="header-key">
+            Active Risks
+          </div>
+        </div>
+        <div class="header-item">
+          <div class="header-value">
+            {{collections.length}}
+          </div>
+          <div class="header-key">
+            Collections
+          </div>
+        </div>
+        <div class="header-item">
+          <div class="header-value">
+            {{moment-from-now lastActivityAt timeZone=timezone}}
+          </div>
+          <div class="header-key">
+            Last Activity
+          </div>
+        </div>
+      </div>
+      <div>
+        <div class="indicator">
+          <div class="tic-gauge-container">
+            <svg x="0" y="0" width="100%" height="100%" viewBox="0 0 55 50">
+              <g transform="translate(28,25)">
+                <g>
+                  <circle
+                          r="{{elementRadius}}"
+                          stroke="#eee"
+                          transform="rotate(-90)"
+                          fill="#fff"
+                          stroke-width="{{elementStrokeWidth}}"
+                          cx="0"
+                          cy="0"
+                  ></circle>
+                  {{! this is the inner circle }}
+                  {{! stroke=<color> is the inner circle color }}
+                  <circle
+                          stroke-dasharray="{{elementCircumference}}"
+                          r="{{elementRadius}}"
+                          stroke="{{elementColor}}"
+                          transform="rotate(-90)"
+                          fill="none"
+                          stroke-dashoffset="{{elementStrokeOffset}}"
+                          stroke-width="{{elementStrokeWidth}}"
+                          cx="0"
+                          cy="0"
+                  ></circle>
+                  <text
+                          text-anchor="middle"
+                          x="0"
+                          y="5"
+                          fill="{{elementColor}}"
+                          font-size="13"
+                  >{{ticScore}}</text>
+                </g>
+              </g>
+            </svg>
+          </div>
+        </div>
       </div>
     </div>
   </div>
   {{! Element Information }}
   {{#if (gt details.owners.length 0)}}
-    <div class='info'>
+    <div class="info">
       {{! ownership }}
-      <div class='ownership'>
+      <div class="ownership">
         {{#if (gt associations.length 0)}}
-          <div class='associations'>
-            <span class='p-title'>
-              {{fa-icon 'desktop' fixedWidth=true}}
+          <div class="associations">
+            <span class="p-title mt-0">
+              {{fa-icon icon="books" fixedWidth=true}}
               Sources
             </span>
             {{#each associations as |association|}}
-              <div class='association-info'>
+              <div class="association-info">
+                <div class="association-item mb-1">
+                  <span class="p-value emphasize-text">{{association.right.name}}</span>
+                </div>
                 {{#each association.sources as |source|}}
-                  <div class='association-item'>
-                    <span class='p-key'>Source:</span>
-                    <span class='p-value'>{{source}}</span>
+                  <div class="association-item">
+                    <span class="p-key">Source:</span>
+                    <span class="p-value">{{source}}</span>
                   </div>
                 {{/each}}
-                <div class='association-item'>
-                  <span class='p-key'>Tic Score:</span>
-                  <span class='p-value'>{{association.right.ticScore}}</span>
+                <div class="association-item">
+                  <span class="p-key">Tic Score:</span>
+                  <span class="p-value">{{association.right.ticScore}}</span>
                 </div>
-                <div class='association-item'>
-                  <span class='p-key'>First Seen:</span>
-                  <span class='p-value'>{{moment-format
+                <div class="association-item">
+                  <span class="p-key">First Seen:</span>
+                  <span class="p-value">{{moment-format
                       association.firstSeen
-                      'YYYY-MM-DD HH:mm:ss z'
+                      "YYYY-MM-DD HH:mm:ss z"
                       timeZone=timezone
                     }}</span>
                 </div>
-                <div class='association-item'>
-                  <span class='p-key'>Last Seen:</span>
-                  <span class='p-value'>{{moment-format
+                <div class="association-item">
+                  <span class="p-key">Last Seen:</span>
+                  <span class="p-value">{{moment-format
                       association.lastSeen
-                      'YYYY-MM-DD HH:mm:ss z'
+                      "YYYY-MM-DD HH:mm:ss z"
                       timeZone=timezone
                     }}</span>
                 </div>
-                {{#each association.right.classifications as |classification|}}
-                  <div class='association-item'>
-                    <span class='p-key'>Classification:</span>
-                    <span class='p-value'>{{classification}}</span>
-                  </div>
-                {{/each}}
-                {{#if (get association.meta 'reports_s')}}
-                  <div class='association-item'>
-                    <span class='p-key'>Reports:</span>
-                    <span class='p-value'>{{get association.meta 'reports_s'}}</span>
+                <div class="association-item">
+                  <span class="p-key">Classification:</span>
+                  <span class="p-value">{{join association.right.classifications ", "}}</span>
+                </div>
+                {{#if (get association.meta "reports_s")}}
+                  <div class="association-item">
+                    <span class="p-key">Reports:</span>
+                    <span class="p-value">{{get association.meta "reports_s"}}</span>
                   </div>
                 {{/if}}
-                {{#if (get association.meta 'targets_s')}}
-                  <div class='association-item'>
-                    <span class='p-key'>Targets:</span>
-                    <span class='p-value'>{{get association.meta 'targets_s'}}</span>
+                {{#if (get association.meta "targets_s")}}
+                  <div class="association-item">
+                    <span class="p-key">Targets:</span>
+                    <span class="p-value">{{get association.meta "targets_s"}}</span>
                   </div>
                 {{/if}}
-                {{#if (get association.meta 'targetport_s')}}
-                  <div class='association-item'>
-                    <span class='p-key'>Targetport:</span>
-                    <span class='p-value'>{{get association.meta 'targetport_s'}}</span>
+                {{#if (get association.meta "targetport_s")}}
+                  <div class="association-item">
+                    <span class="p-key">Targetport:</span>
+                    <span class="p-value">{{get association.meta "targetport_s"}}</span>
                   </div>
                 {{/if}}
               </div>
@@ -114,28 +140,42 @@
         {{/if}}
 
         {{#each details.owners as |owner|}}
+          {{#if (gt collections.length 0)}}
+            <div class="owners">
+              <span class="p-title">
+                {{fa-icon icon="album-collection" fixedWidth=true}}
+                Collections
+              </span>
+              {{#each owner.collections as |collection|}}
+                <div class="ownership-item">
+                  <div class="emphasize-text">{{collection.collectionName}}</div>
+                  <div class="mt-1">TIC Score: {{collection.ticScore}}</div>
+                </div>
+              {{/each}}
+            </div>
+          {{/if}}
           {{#if (gt owner.owners.length 0)}}
-            <div class='owners'>
-              <span class='p-title'>
-                {{fa-icon 'user' fixedWidth=true}}
+            <div class="owners">
+              <span class="p-title">
+                {{fa-icon icon="user" fixedWidth=true}}
                 Ownership
               </span>
               {{#each owner.owners as |name|}}
-                <div class='ownership-item'>
-                  <span class='p-tag'>{{name}}</span>
+                <div class="ownership-item">
+                  <span>{{name}}</span>
                 </div>
               {{/each}}
             </div>
           {{/if}}
           {{#if (gt owner.cidrv4s.length 0)}}
-            <div class='cidr'>
-              <span class='p-title'>
-                {{fa-icon 'info' fixedWidth=true}}
+            <div class="cidr">
+              <span class="p-title">
+                {{fa-icon icon="info" fixedWidth=true}}
                 CIDRs
               </span>
               {{#each owner.cidrv4s as |cidr|}}
-                <div class='ownership-item'>
-                  <span class='p-value'>{{cidr}}</span>
+                <div class="ownership-item">
+                  <span class="p-value">{{cidr}}</span>
                 </div>
               {{/each}}
             </div>
@@ -146,48 +186,48 @@
 
       {{#if owners}}
         {{! Location information }}
-        <div class='locations-toggle' onclick={{action 'toggleLocations'}}>
-          <div class='toggle-content'>
-            <span class='toggle-text'>Locations</span>
+        <div class="locations-toggle {{if showLocations "open"}}" onclick={{action "toggleLocations"}}>
+          <div class="toggle-content">
+            <span class="toggle-text">Locations</span>
             {{#if showLocations}}
-              <span class='toggle-icon'>{{fa-icon 'angle-up'}}</span>
+              <span class="toggle-icon">{{fa-icon icon="angle-up"}}</span>
             {{else}}
-              <span class='toggle-icon'>{{fa-icon 'angle-down'}}</span>
+              <span class="toggle-icon">{{fa-icon icon="angle-down"}}</span>
             {{/if}}
           </div>
         </div>
         {{#if showLocations}}
-          <div class='data-container'>
+          <div class="data-container">
             {{#each owners as |owner|}}
               {{! Address information }}
               {{#if owner.locations}}
                 {{#each owner.locations as |location|}}
-                  <div class='card'>
-                    <div class='card-item'>
+                  <div class="card">
+                    <div class="card-item">
                       <span>City:</span>
                       <span>{{location.city}}</span>
                     </div>
-                    <div class='card-item'>
+                    <div class="card-item">
                       <span>Country:</span>
                       <span>{{location.country}}</span>
                     </div>
-                    <div class='card-item'>
+                    <div class="card-item">
                       <span>Region:</span>
                       <span>{{location.region}}</span>
                     </div>
-                    <div class='card-item'>
+                    <div class="card-item">
                       <span>Country Name:</span>
                       <span>{{location.countryName}}</span>
                     </div>
-                    <div class='card-item'>
+                    <div class="card-item">
                       <span>Country Digit:</span>
                       <span>{{location.country2Digit}}</span>
                     </div>
-                    <div class='card-item'>
+                    <div class="card-item">
                       <span>Last Seen:</span>
                       <span>{{moment-format
                           location.lastSeen
-                          'YYYY-MM-DD HH:mm:ss z'
+                          "YYYY-MM-DD HH:mm:ss z"
                           timeZone=timezone
                         }}</span>
                     </div>
@@ -201,79 +241,79 @@
       {{! End of locations }}
 
       {{! whois information }}
-      {{#if (or whoIsRecord whoIsRegistrant)}}
-        <div class='locations-toggle' onclick={{action 'toggleWhoIs'}}>
-          <div class='toggle-content'>
-            <span class='toggle-text'>WhoIs</span>
-            {{#if showWhoIs}}
-              <span class='toggle-icon'>{{fa-icon 'angle-up'}}</span>
+      {{#if (or whoisRecord whoisRegistrant)}}
+        <div class="locations-toggle {{if showWhois "open"}}" onclick={{action "toggleWhois"}}>
+          <div class="toggle-content">
+            <span class="toggle-text">WHOIS</span>
+            {{#if showWhois}}
+              <span class="toggle-icon">{{fa-icon icon="angle-up"}}</span>
             {{else}}
-              <span class='toggle-icon'>{{fa-icon 'angle-down'}}</span>
+              <span class="toggle-icon">{{fa-icon icon="angle-down"}}</span>
             {{/if}}
           </div>
         </div>
-        {{#if showWhoIs}}
-          <div class='data-container'>
+        {{#if showWhois}}
+          <div class="data-container">
             {{! whois information }}
-            <div class='card'>
-              {{#if (get whoIsRecord 'registrar-name')}}
-                <div class='card-item'>
+            <div class="card">
+              {{#if (get whoisRecord "registrar-name")}}
+                <div class="card-item">
                   <span>Registrar Name:</span>
-                  <span>{{get whoIsRecord 'registrar-name'}}</span>
+                  <span>{{get whoisRecord "registrar-name"}}</span>
                 </div>
               {{/if}}
-              {{#if whoIsRegistrant.country}}
-                <div class='card-item'>
+              {{#if whoisRegistrant.country}}
+                <div class="card-item">
                   <span>Organization:</span>
-                  <span>{{whoIsRegistrant.organization}}</span>
+                  <span>{{whoisRegistrant.organization}}</span>
                 </div>
               {{/if}}
-              {{#if whoIsRegistrant.city}}
-                <div class='card-item'>
+              {{#if whoisRegistrant.city}}
+                <div class="card-item">
                   <span>City:</span>
-                  <span>{{whoIsRegistrant.city}}</span>
+                  <span>{{whoisRegistrant.city}}</span>
                 </div>
               {{/if}}
-              {{#if (get whoIsRegistrant 'country-code')}}
-                <div class='card-item'>
+              {{#if (get whoisRegistrant "country-code")}}
+                <div class="card-item">
                   <span>City:</span>
-                  <span>{{get whoIsRegistrant 'country-code'}}</span>
+                  <span>{{get whoisRegistrant "country-code"}}</span>
                 </div>
               {{/if}}
-              {{#if (get whoIsRegistrant 'postal-code')}}
-                <div class='card-item'>
+              {{#if (get whoisRegistrant "postal-code")}}
+                <div class="card-item">
                   <span>Postal Code:</span>
-                  <span>{{get whoIsRegistrant 'postal-code'}}</span>
+                  <span>{{get whoisRegistrant "postal-code"}}</span>
                 </div>
               {{/if}}
-              {{#if (get whoIsRegistrant 'street-1')}}
-                <div class='card-item'>
+              {{#if (get whoisRegistrant "street-1")}}
+                <div class="card-item">
                   <span>Street:</span>
-                  <span>{{get whoIsRegistrant 'street-1'}}</span>
+                  <span>{{get whoisRegistrant "street-1"}}</span>
                 </div>
               {{/if}}
-              {{#if whoIsRegistrant.country}}
-                <div class='card-item'>
+              {{#if whoisRegistrant.country}}
+                <div class="card-item">
                   <span>Country:</span>
-                  <span>{{whoIsRegistrant.country}}</span>
+                  <span>{{whoisRegistrant.country}}</span>
                 </div>
               {{/if}}
-              {{#if whoIsRegistrant.fax}}
-                <div class='card-item'>
+              {{#if whoisRegistrant.fax}}
+                <div class="card-item">
                   <span>Fax:</span>
-                  <span>{{whoIsRegistrant.fax}}</span>
+                  <span>{{whoisRegistrant.fax}}</span>
                 </div>
               {{/if}}
-              {{#if whoIsRegistrant.email}}
-                <div class='card-item'>
+              {{#if whoisRegistrant.email}}
+                <div class="card-item">
                   <span>Email:</span>
-                  <span>{{whoIsRegistrant.email}}</span>
+                  <span>{{whoisRegistrant.email}}</span>
                 </div>
               {{/if}}
-              {{#if whoIsRegistrant.telephone}}
-                <div class='card-item'>
+              {{#if whoisRegistrant.telephone}}
+                <div class="card-item">
                   <span>Telephone:</span>
-                  <span>{{whoIsRegistrant.telephone}}</span>
+                  <span>{{whoisRegistrant.telephone}}</span>
                 </div>
               {{/if}}
             </div>
@@ -285,66 +325,66 @@
 
       {{! dns  }}
       {{#if dnsHistory}}
-        <div class='locations-toggle' onclick={{action 'toggleDnsHistory'}}>
-          <div class='toggle-content'>
-            <span class='toggle-text'>DNS History</span>
-            <span class='toggle-text'>Showing
+        <div class="locations-toggle" onclick={{action "toggleDnsHistory"}}>
+          <div class="toggle-content">
+            <span class="toggle-text">DNS History</span>
+            <span class="toggle-text">Showing
               {{dnsHistory.length}}
               of
-              {{get details.dns.summary 'total-results'}}
+              {{get details.dns.summary "total-results"}}
               results</span>
             {{#if toggleDnsHistory}}
-              <span class='toggle-icon'>{{fa-icon 'angle-up'}}</span>
+              <span class="toggle-icon">{{fa-icon icon="angle-up"}}</span>
             {{else}}
-              <span class='toggle-icon'>{{fa-icon 'angle-down'}}</span>
+              <span class="toggle-icon">{{fa-icon icon="angle-down"}}</span>
             {{/if}}
           </div>
         </div>
         {{#if toggleDnsHistory}}
-          <span class='dns-link'>
+          <span class="dns-link">
             <a
-              href='https://pov.sp.lookingglasscyber.com/search/basic/{{block.entity.value}}'
+              href="https://pov.sp.lookingglasscyber.com/search/basic/{{block.entity.value}}"
             >View DNS History in ScoutPrime
-              {{fa-icon 'external-link' class='external-link-icon'}}</a>
+              {{fa-icon icon="external-link" class="external-link-icon"}}</a>
           </span>
-          <div class='dns-history'>
+          <div class="dns-history">
             {{! dns information }}
             {{#each dnsHistory as |listing|}}
-              <div class='dns-history-info'>
+              <div class="dns-history-info">
                 <div>
-                  <span class='p-key'>Tic Score:</span>
-                  <span class='p-value'>{{get listing 'tic-score'}}</span>
+                  <span class="p-key">Tic Score:</span>
+                  <span class="p-value">{{get listing "tic-score"}}</span>
                 </div>
                 <div>
-                  <span class='p-key'>DNS Type:</span>
-                  <span class='p-value'>{{get listing 'dns-type'}}</span>
+                  <span class="p-key">DNS Type:</span>
+                  <span class="p-value">{{get listing "dns-type"}}</span>
                 </div>
                 <div>
-                  <span class='p-key'>FQDN:</span>
-                  <span class='p-value'>{{listing.fqdn}}</span>
+                  <span class="p-key">FQDN:</span>
+                  <span class="p-value">{{listing.fqdn}}</span>
                 </div>
                 <div>
-                  <span class='p-key'>Count:</span>
-                  <span class='p-value'>{{listing.count}}</span>
+                  <span class="p-key">Count:</span>
+                  <span class="p-value">{{listing.count}}</span>
                 </div>
                 <div>
-                  <span class='p-key'>FQDN:</span>
-                  <span class='p-value'>{{listing.ipv4}}</span>
+                  <span class="p-key">FQDN:</span>
+                  <span class="p-value">{{listing.ipv4}}</span>
                 </div>
                 <div>
-                  <span class='p-key'>Time Fist:</span>
-                  <span class='p-value'>{{moment-format
-                      (get listing 'time-first')
-                      'YYYY-MM-DD HH:mm:ss z'
+                  <span class="p-key">Time Fist:</span>
+                  <span class="p-value">{{moment-format
+                      (get listing "time-first")
+                      "YYYY-MM-DD HH:mm:ss z"
                       timeZone=timezone
                     }}
                   </span>
                 </div>
                 <div>
-                  <span class='p-key'>Time Last:</span>
-                  <span class='p-value'>{{moment-format
-                      (get listing 'time-last')
-                      'YYYY-MM-DD HH:mm:ss z'
+                  <span class="p-key">Time Last:</span>
+                  <span class="p-value">{{moment-format
+                      (get listing "time-last")
+                      "YYYY-MM-DD HH:mm:ss z"
                       timeZone=timezone
                     }}
                   </span>

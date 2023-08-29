@@ -39,9 +39,28 @@ div.container-fluid {
   padding: 0px;
 }
 
+.header {
+  display: flex;
+  align-items: center;
+  padding: 0px 5px;
+
+  .header-value {
+    font-weight: bold;
+    font-size: 14px;
+  }
+
+  .header-key {
+    margin-top: 5px;
+  }
+
+  .header-item {
+    margin-right: 15px;
+  }
+}
+
 // // Indicator Header
 h1 {
-  font-size: 16px;
+  font-size: 14px;
   font-weight: bold;
   padding: 0px;
   margin: 0px;
@@ -70,7 +89,6 @@ h3 {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  border-bottom: 1px solid rgba(0, 0, 0, 0.1);
 
   .title {
     margin-left: 10px;
@@ -86,11 +104,20 @@ h3 {
 }
 
 .locations-toggle {
-  width: 90%;
   background-color: #f0f0f0;
   cursor: pointer;
   padding: 10px;
-  margin-top: 30px;
+  margin-top: 10px;
+  border: 1px solid #e0e0e0;
+  border-radius: 4px;
+
+  &.open {
+    border-radius: 4px 4px 0px 0px;
+  }
+
+  &:hover {
+    background-color: darken(#f0f0f0, 5%);
+  }
 }
 
 .toggle-content {
@@ -105,40 +132,32 @@ h3 {
 }
 
 .toggle-text {
-  font-size: 16px;
+  font-size: 14px;
   font-weight: bold;
 }
 
 .data-container {
   display: flex;
   flex-direction: column;
-  width: 90%;
-  padding: 7px;
   background-color: white;
-  margin-top: 7px;
-}
-
-.header {
-  display: flex;
-  align-items: center;
-  margin-bottom: 16px;
 }
 
 .card {
   background-color: #ffffff;
   border: 1px solid #e0e0e0;
-  border-radius: 8px;
+  border-radius: 0 0 4px 4px;
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
   padding: 16px;
   margin-bottom: 5px;
   width: 100%;
+  border-top: 0px;
 }
 
 .card-item {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  width: 80%;
+  width: 100%;
   margin-bottom: 10px;
 }
 
@@ -156,23 +175,27 @@ h3 {
   flex: 2;
 }
 
-.card-item span:first-child {
-  font-weight: bold;
+.card-item span:first-child, .emphasize-text {
+  font-weight: 500;
 }
+
+
 
 .ownership {
   display: flex;
   flex-direction: column;
-  width: 90%;
-  border-radius: 8px;
-  box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1);
-  padding-left: 25px;
-  background-color: white;
-  margin-top: 30px;
+  background-color: #ffffff;
+  border: 1px solid #e0e0e0;
+  border-radius: 4px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  padding: 15px;
+  margin-top: 10px;
 }
 
 .ownership-item {
   margin-bottom: 5px;
+  border: 1px solid #efefef;
+  padding: 3px;
 }
 
 .association-info {
@@ -180,7 +203,6 @@ h3 {
 }
 
 .dns-history {
-  width: 90%;
   border-radius: 8px;
   box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1);
   padding-left: 25px;
