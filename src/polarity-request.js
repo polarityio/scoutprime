@@ -40,6 +40,7 @@ class PolarityRequest {
     this.headers = {};
     this.options = {};
   }
+
   /**
    * Set header `field` to `val`, or pass
    * an object of header fields.
@@ -68,6 +69,7 @@ class PolarityRequest {
   setOptions(options) {
     this.options = options;
   }
+
   /**
    * Makes a request network request using postman-request.  If the request is an array, it will run the requests in parallel.
    * @param requestOptions  - the request options to pass to postman-request. It will either being an array of requests or a single request.
@@ -113,16 +115,11 @@ class PolarityRequest {
 
         if (statusCode === HTTP_CODE_BAD_REQUEST_400) {
           return reject(
-            new ApiRequestError(
-              `Request Error:
-                - Check that your API key has not gone over the daily rate limit.
-                - Or, check that the MXtoolBox URL is correct in the Polarity client user options.
-                `,
-              {
-                statusCode,
-                requestOptions
-              }
-            )
+            new ApiRequestError(`Request Error: Invalid Request (400)`, {
+              statusCode,
+              requestOptions,
+              body: response.body
+            })
           );
         }
 
