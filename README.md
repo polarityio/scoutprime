@@ -8,11 +8,11 @@ Search the Lookingglass scoutPRIME and display information including TIC Score, 
 
 ### scoutPRIME URL
 
-The base URL for the ScoutPrime API to include the schema (https://) and port as needed
+The base URL for the ScoutPrime API to include the scheme (https://).
 
-### scoutPRIME API Key
+### scoutPRIME API Token
 
-ScoutPrime API Key, that can be generated from the ScoutPrime dashboard.
+ScoutPrime API Token, that can be generated from the ScoutPrime dashboard.
 
 ## Installation Instructions
 
