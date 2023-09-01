@@ -10,14 +10,14 @@ jobs:
     container: 'centos:7'
 
     steps:
-    - uses: actions/checkout@v2
-    - uses: actions/setup-node@v1
-    - name: Test NPM Install
-      id: test-npm-install
-      run: |
-        npm ci
-    - name: Polarity Integration Development Checklist
-      id: int-dev-checklist
-      uses: polarityio/polarity-integration-development-checklist@main
-      with:
-        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      - uses: actions/checkout@v2
+      - uses: actions/setup-node@v1
+      - name: Test NPM Install
+        id: test-npm-install
+        run: |
+          npm ci
+      - name: Polarity Integration Development Checklist
+        id: int-dev-checklist
+        uses: polarityio/polarity-integration-development-checklist@main
+        with:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
