@@ -55,7 +55,7 @@ module.exports = {
         'Select the search criteria to use when searching scoutPRIME.  Only indicators that meet the selected criteria will be returned.  Defaults to "All".',
       default: {
         value: 'all',
-        display: 'All -- return all records'
+        display: 'All -- return all indicators'
       },
       type: 'select',
       options: [
