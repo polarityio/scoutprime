@@ -29,9 +29,9 @@ class PolarityResult {
     };
   }
 
-  createNoResultsObject() {
+  createNoResultsObject(entity) {
     return {
-      entity: this.entity,
+      entity: entity,
       data: null
     };
   }

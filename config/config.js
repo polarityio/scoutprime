@@ -47,6 +47,39 @@ module.exports = {
       type: 'password',
       userCanEdit: true,
       adminOnly: true
+    },
+    {
+      key: 'searchCriteria',
+      name: 'Search Criteria',
+      description:
+        'Select the search criteria to use when searching scoutPRIME.  Only indicators that meet the selected criteria will be returned.  Defaults to "All".',
+      default: {
+        value: 'all',
+        display: 'All -- return all records'
+      },
+      type: 'select',
+      options: [
+        {
+          value: 'all',
+          display: 'All -- return all indicators'
+        },
+        {
+          value: 'collections',
+          display: 'Collections Only -- only return indicators that are in a collection'
+        },
+        {
+          value: 'activeRisks',
+          display: 'Active Risks Only -- only return indicators that have active risks'
+        },
+        {
+          value: 'collectionsOrActiveRisks',
+          display:
+            'Collections or Active Risks Only -- only return indicators that are in a collection or have active risks'
+        }
+      ],
+      multiple: false,
+      userCanEdit: false,
+      adminOnly: true
     }
   ]
 };

@@ -34,7 +34,26 @@ async function doLookup(entities, options, cb) {
         const owners = await getOwners(entity);
 
         const responses = { entity, associations, owners, whois };
-        return polarityResult.createResultsObject(responses);
+
+        const isInCollection = owners.some((owner) => {
+          return Array.isArray(owner.collections) && owner.collections.length > 0;
+        });
+        const hasActiveRisks = Array.isArray(associations.results) && associations.results.length > 0;
+        const searchCriteria = options.searchCriteria.value;
+
+        Logger.trace({responses}, 'Responses from Scout Prime before filtering based on search criteria');
+
+        if (
+          searchCriteria === 'all' ||
+          (searchCriteria === 'collections' && isInCollection) ||
+          (searchCriteria === 'activeRisks' && hasActiveRisks) ||
+          (searchCriteria === 'collectionsOrActiveRisks' &&
+            (isInCollection || hasActiveRisks))
+        ) {
+          return polarityResult.createResultsObject(responses);
+        } else {
+          return polarityResult.createNoResultsObject(entity);
+        }
       }, entities)
     );
 
