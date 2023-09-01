@@ -35,13 +35,14 @@ polarity.export = PolarityComponent.extend({
       return lastActivityAt;
     }
   ),
-  dnsHistory: Ember.computed('block.data.details', function () {
+  dnsHistory: Ember.computed('block.data.details.dns.result', function () {
     const dns = this.get('block.data.details.dns.result');
     if (dns) {
       return dns['dns-history'];
     }
+    return false;
   }),
-  ticScore: Ember.computed('block.data.details', function () {
+  ticScore: Ember.computed('block.data.details.owners.[]', function () {
     const owners = this.get('block.data.details.owners');
     let totalTicScore = 0;
 
@@ -51,7 +52,7 @@ polarity.export = PolarityComponent.extend({
 
     return totalTicScore;
   }),
-  collections: Ember.computed('block.data.details', function () {
+  collections: Ember.computed('block.data.details.owners.[]', function () {
     const owners = this.get('block.data.details.owners');
 
     return owners.reduce((acc, owner) => {
@@ -59,7 +60,7 @@ polarity.export = PolarityComponent.extend({
       return acc;
     }, []);
   }),
-  name: Ember.computed('block.data.details', function () {
+  name: Ember.computed('block.data.details.owners.[]', function () {
     const owners = this.get('block.data.details.owners');
 
     const name = owners[0].name;
@@ -112,5 +113,3 @@ polarity.export = PolarityComponent.extend({
     }
   }
 });
-
-// TODO: associations are going to be a list under a tab
