@@ -1,40 +1,36 @@
-# Polarity scoutPRIME® Integration
+# Polarity scoutPRIME Integration
 
-![image](https://img.shields.io/badge/status-beta-green.svg)
+Search the Lookingglass scoutPRIME and display information including TIC Score, Sources, Collections, WHOIS, and Location data for IPv4 addresses and domains. 
 
-scoutPRIME® provides a holistic, always-on, “outside-in” view of the internet infrastructure you care about
+<img src="./images/overlay.png" width="50%">
 
-The Polarity scoutPRIME® Integration allows users to search Threat Information for Domains, and IP Addresses.
+## scoutPRIME Integration Options
 
-To learn more about scoutPRIME®, visit the [official website](https://lookingglasscyber.com/resources/data-sheets/scoutprime-attack-surface-management/).
+### scoutPRIME URL
 
-## scoutPRIME® Integration Options
+The base URL for the ScoutPrime API to include the scheme (https://).
 
-### Scout Prime URL
-URL for Scout Prime
+### scoutPRIME API Token
 
-### User Name
-User Name for Scout Prime
+ScoutPrime API Token, that can be generated from the ScoutPrime dashboard.
 
-### Password
-Password for your login to Scout Prime
+### Search Criteria
 
-### Minimum TIC Score
-Minimum TIC Score to be notified on, values range from 0-100
+Select the search criteria to use when searching scoutPRIME. Only indicators that meet the selected criteria will be returned. Defaults to "All".
 
-### Lookup IPv4 Addresses
-If checked, the integration will lookup IPv4 addresses in Scout Prime
+Options are:
 
-### Lookup CIDRs
-If checked, the integration will lookup CIDRs in Scout Prime
-
-### Lookup Fully Qualified Domain Names
-If checked, the integration will lookup FQDNs in Scout Prime
+* All - return all indicators
+* Collections Only -- only return indicators that are in a collection
+* Active Risks Only -- only return indicators that have active risks
+* Collections or Active Risks Only -- only return indicators that are in a collection or have active risks
 
 ## Installation Instructions
+
 Installation instructions for integrations are provided on the [PolarityIO GitHub Page](https://polarityio.github.io/).
 
 ## Polarity
+
 Polarity is a memory-augmentation platform that improves and accelerates analyst decision making. For more information about the Polarity platform please see:
 
 https://polarity.io/

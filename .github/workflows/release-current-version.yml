@@ -7,5 +7,5 @@ on:
 jobs:
   Run:
     uses: polarityio/polarity-github-actions/.github/workflows/release-server-versions-for-int-store.yml@master
-    # with: 
-      # use-integration-development-checklist: false
+      # with:
+    # use-integration-development-checklist: false
