@@ -85,7 +85,7 @@ polarity.export = PolarityComponent.extend({
   threatCircumference: Ember.computed('threatRadius', function () {
     return 2 * Math.PI * this.get('threatRadius');
   }),
-  elementCircumference: Ember.computed('elementCircumference', function () {
+  elementCircumference: Ember.computed('elementRadius', function () {
     return 2 * Math.PI * this.get('elementRadius');
   }),
   actions: {
