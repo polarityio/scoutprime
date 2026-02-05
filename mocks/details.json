@@ -1,0 +1,136 @@
+{
+  "entity": {
+    "value": "192.0.2.100",
+    "type": "IPv4"
+  },
+  "associations": {
+    "results": [
+      {
+        "right": {
+          "description": "CVE-2023-12345 - Remote Code Execution vulnerability in Apache Struts",
+          "cvss": 9.8,
+          "classifications": ["exploit", "remote-code-execution", "critical"],
+          "ticScore": 92,
+          "threatId": "threat-uuid-1234",
+          "name": "CVE-2023-12345"
+        },
+        "firstSeen": "2023-08-15T10:23:45.000Z",
+        "lastSeen": "2024-01-10T14:32:18.000Z",
+        "meta": {
+          "reports_s": "APT29, FIN7",
+          "targets_s": "Financial Services, Healthcare",
+          "targetport_s": "8080"
+        },
+        "port": 8080,
+        "sources": ["National Vulnerability Database", "CISA KEV"],
+        "userUploaded": false
+      },
+      {
+        "right": {
+          "description": "Malicious domain associated with Emotet botnet campaign",
+          "cvss": null,
+          "classifications": ["malware", "botnet", "c2"],
+          "ticScore": 87,
+          "threatId": "threat-uuid-5678",
+          "name": "Emotet C2 Infrastructure"
+        },
+        "firstSeen": "2023-11-02T08:15:33.000Z",
+        "lastSeen": "2024-01-14T22:45:12.000Z",
+        "meta": {
+          "reports_s": "Emotet Campaign Wave 2023-Q4",
+          "targets_s": "Global",
+          "targetport_s": "443"
+        },
+        "port": 443,
+        "sources": ["LookingGlass Threat Intelligence", "AlienVault OTX"],
+        "userUploaded": false
+      },
+      {
+        "right": {
+          "description": "Suspicious TLS certificate associated with phishing infrastructure",
+          "cvss": null,
+          "classifications": ["phishing", "credential-theft"],
+          "ticScore": 65,
+          "threatId": "threat-uuid-9012",
+          "name": "Phishing Infrastructure - Financial Sector"
+        },
+        "firstSeen": "2024-01-05T16:42:09.000Z",
+        "lastSeen": "2024-01-15T19:28:44.000Z",
+        "meta": {
+          "reports_s": "Q1 2024 Phishing Campaign",
+          "targets_s": "Banking, Cryptocurrency Exchanges"
+        },
+        "port": 443,
+        "sources": ["PhishTank", "OpenPhish"],
+        "userUploaded": true
+      }
+    ],
+    "total": 3,
+    "query_metadata": {
+      "execution_time_ms": 142,
+      "timestamp": "2024-01-16T08:15:23.456Z"
+    }
+  },
+  "owners": [
+    {
+      "name": "Example Hosting LLC",
+      "ticScore": 45,
+      "collections": [
+        {
+          "collectionName": "Monitored Infrastructure",
+          "ticScore": 50
+        }
+      ],
+      "owners": ["Example Hosting LLC", "Upstream ISP Corp"],
+      "cidrv4s": ["192.0.2.0/24", "198.51.100.0/24"],
+      "cidrv6s": [],
+      "asns": [64512],
+      "locations": [
+        {
+          "city": "San Francisco",
+          "region": "California",
+          "country": "US",
+          "countryName": "United States",
+          "country2Digit": "US",
+          "lastSeen": "2024-01-15T12:00:00.000Z"
+        }
+      ],
+      "labels": ["hosting-provider", "high-risk-asn"],
+      "lastActivityAt": "2024-01-15T19:28:44.000Z",
+      "sources": ["MaxMind GeoIP", "ARIN WHOIS"],
+      "md5s": [],
+      "sha1s": [],
+      "sha256s": [],
+      "sha512s": [],
+      "ticHistory7d": [42, 45, 47, 46, 45, 45, 45]
+    }
+  ],
+  "whois": {
+    "result": {
+      "whois-record": {
+        "registry-data": {
+          "registrar-name": "Example Registrar Inc.",
+          "created-date": "2015-03-12T00:00:00.000Z",
+          "updated-date": "2023-12-01T00:00:00.000Z",
+          "expires-date": "2025-03-12T00:00:00.000Z",
+          "registrant": {
+            "organization": "Example Hosting LLC",
+            "email": "admin@example-hosting.com",
+            "telephone": "+1.5555551234",
+            "fax": "+1.5555551235",
+            "street-1": "123 Main Street",
+            "city": "San Francisco",
+            "postal-code": "94102",
+            "country": "United States",
+            "country-code": "US"
+          }
+        }
+      }
+    }
+  },
+  "debug_metadata": {
+    "integration_version": "2.5.0",
+    "api_endpoint": "https://pov.sp.lookingglasscyber.com/api/",
+    "internal_request_id": "req-abc123-def456"
+  }
+}
