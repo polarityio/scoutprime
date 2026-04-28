@@ -7,7 +7,7 @@ import { IntegrationComponentBase, IBlock, typographyCSS } from '@polarityio/pi-
 interface AssociationResult {
   right: {
     description: string;
-    cvss: number;
+    cvss: number | null;
     classifications: string[];
     ticScore: number;
     threatId: string;
@@ -289,7 +289,21 @@ export class DetailsComponent extends IntegrationComponentBase {
   private get _lastActivityAt(): string {
     const results = this._associations;
     if (results.length === 0) return '';
-    return results[results.length - 1].lastSeen;
+
+    let latestLastSeen = '';
+    let latestTimestamp = Number.NEGATIVE_INFINITY;
+
+    for (const result of results) {
+      if (!result.lastSeen) continue;
+
+      const timestamp = Date.parse(result.lastSeen);
+      if (!Number.isNaN(timestamp) && timestamp > latestTimestamp) {
+        latestTimestamp = timestamp;
+        latestLastSeen = result.lastSeen;
+      }
+    }
+
+    return latestLastSeen;
   }
 
   private get _hasLocationData(): boolean {

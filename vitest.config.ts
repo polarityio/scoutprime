@@ -5,6 +5,14 @@ export default defineConfig({
   test: {
     projects: [
       {
+        resolve: {
+          alias: {
+            'polarity-integration-utils': new URL(
+              'node_modules/polarity-integration-utils/dist/lib/index.js',
+              import.meta.url
+            ).pathname
+          }
+        },
         test: {
           name: 'server',
           environment: 'node',

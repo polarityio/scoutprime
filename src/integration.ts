@@ -35,9 +35,11 @@ async function doLookup(
 
   const lookupResults = await Promise.all(
     entities.map(async (entity): Promise<DoLookupResult[number]> => {
-      const associations = await getAssociations(entity, options, request);
-      const whois = await getWhois(entity, options, request);
-      const owners = await getOwners(entity, options, request);
+      const [associations, whois, owners] = await Promise.all([
+        getAssociations(entity, options, request),
+        getWhois(entity, options, request),
+        getOwners(entity, options, request)
+      ]);
 
       const isInCollection = owners.some(
         (owner: Owner) => Array.isArray(owner.collections) && owner.collections.length > 0

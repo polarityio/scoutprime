@@ -1,7 +1,7 @@
 export interface AssociationResult {
   right: {
     description: string;
-    cvss: number;
+    cvss: number | null;
     classifications: string[];
     ticScore: number;
     threatId: string;
