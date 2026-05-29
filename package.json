@@ -4,13 +4,13 @@
   "version": "4.0.0",
   "private": true,
   "dependencies": {
-    "polarity-integration-utils": "^4.1.0"
+    "polarity-integration-utils": "^4.3.0"
   },
   "devDependencies": {
     "@eslint/js": "^10.0.1",
-    "@polarityio/integration-types": "^1.0.3",
-    "@polarityio/pi-components": "^1.5.0",
-    "@polarityio/vite-plugin-icl": "^1.0.1",
+    "@polarityio/integration-types": "^2.0.0",
+    "@polarityio/pi-components": "^1.12.0",
+    "@polarityio/vite-plugin-icl": "^1.0.2",
     "@vitest/browser": "^4.1.4",
     "@vitest/browser-playwright": "^4.1.4",
     "eslint": "^10.2.0",
