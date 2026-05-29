@@ -12,10 +12,12 @@ import type { ScoutPrimeDetails, Owner } from './types/scout-prime';
 import { getAssociations, getOwners, getWhois } from './queries';
 
 let logger: Logger;
+let request: PolarityRequest;
 
 function startup(log: Logger): void {
   logger = log;
   setLogger(log);
+  request = new PolarityRequest();
 }
 
 async function doLookup(
@@ -30,8 +32,8 @@ async function doLookup(
 
   logger.trace({ entities }, 'Entities');
 
-  const request = new PolarityRequest();
   request.userOptions = options;
+  request.network = context.network;
 
   const lookupResults = await Promise.all(
     entities.map(async (entity): Promise<DoLookupResult[number]> => {
