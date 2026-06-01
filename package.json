@@ -1,14 +1,38 @@
 {
-  "main": "./integration.js",
+  "main": "./dist/integration.js",
   "name": "scoutPRIME",
-  "version": "3.0.6",
+  "version": "4.0.0",
   "private": true,
   "dependencies": {
-    "async": "^3.2.6",
-    "lodash": "^4.18.1",
-    "postman-request": "^2.88.1-postman.48"
+    "polarity-integration-utils": "^4.3.0"
   },
   "devDependencies": {
-    "prettier": "3.0.1"
+    "@eslint/js": "^10.0.1",
+    "@polarityio/integration-types": "^2.0.0",
+    "@polarityio/pi-components": "^1.12.0",
+    "@polarityio/vite-plugin-icl": "^1.0.2",
+    "@vitest/browser": "^4.1.4",
+    "@vitest/browser-playwright": "^4.1.4",
+    "eslint": "^10.2.0",
+    "eslint-config-prettier": "^10.1.8",
+    "lit": "^3.3.2",
+    "playwright": "^1.59.1",
+    "prettier": "^3.8.3",
+    "typescript": "^5.9.3",
+    "typescript-eslint": "^8.58.2",
+    "vite": "^7.3.2",
+    "vitest": "^4.1.4"
+  },
+  "scripts": {
+    "build": "tsc && vite build",
+    "typecheck": "tsc --noEmit && tsc -p tsconfig.web.json",
+    "lint": "eslint src/ web-components/",
+    "lint:fix": "eslint src/ web-components/ --fix",
+    "format": "prettier --write 'src/**/*.ts' 'web-components/**/*.ts'",
+    "format:check": "prettier --check 'src/**/*.ts' 'web-components/**/*.ts'",
+    "test": "vitest run",
+    "test:server": "vitest run --project server",
+    "test:browser": "vitest run --project browser",
+    "test:watch": "vitest"
   }
 }
