@@ -7,5 +7,3 @@ on:
 jobs:
   Run:
     uses: polarityio/polarity-github-actions/.github/workflows/release-integration.yml@master
-    # with: 
-      # use-integration-development-checklist: false

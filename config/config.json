@@ -3,32 +3,30 @@
   "name": "scoutPRIME",
   "acronym": "SP",
   "description": "Search LookingGlass scoutPRIME for information about IP addresses, domains and CIDR blocks.",
-  "onDemandOnly": true,
+  "runtimeVersion": 2,
   "defaultColor": "light-gray",
-  "request": {
-    "cert": "",
-    "key": "",
-    "passphrase": "",
-    "ca": "",
-    "proxy": ""
-  },
-  "logging": {
-    "level": "info"
-  },
-  "entityTypes": [
+  "onDemandOnly": true,
+  "dataTypes": [
     "IPv4",
     "domain",
     "IPv4CIDR"
   ],
-  "styles": [
-    "./styles/scprime.less"
-  ],
-  "block": {
-    "component": {
-      "file": "./components/scprime.js"
-    },
-    "template": {
-      "file": "./templates/scprime.hbs"
+  "logging": {
+    "level": "info"
+  },
+  "webComponents": {
+    "id": "1b892737-a239-4200-bac8-afaacb3927d0",
+    "moduleFilename": "web-components.mjs",
+    "components": [
+      {
+        "type": "details",
+        "element": "px-int-1moptzg6pofprp5k3shxbjpow-sp-details-v4-0-0"
+      }
+    ]
+  },
+  "reducer": {
+    "details": {
+      "file": "./reducers/details.json"
     }
   },
   "options": [
@@ -81,10 +79,5 @@
       "userCanEdit": false,
       "adminOnly": true
     }
-  ],
-  "reducer": {
-    "details": {
-      "file": "./reducers/details.json"
-    }
-  }
+  ]
 }
