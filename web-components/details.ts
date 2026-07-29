@@ -90,14 +90,10 @@ interface ScoutPrimeDetails {
 
 // ── Helpers ──────────────────────────────────────────────────────────────────
 
-const RED = '#fa5843';
-const YELLOW = '#ffc15d';
-const GREEN = '#7dd21b';
-
 function getThreatColor(ticScore: number): string {
-  if (ticScore >= 75) return RED;
-  if (ticScore >= 50) return YELLOW;
-  return GREEN;
+  if (ticScore >= 75) return 'var(--pi-color-font-danger)';
+  if (ticScore >= 50) return 'var(--pi-color-font-warning)';
+  return 'var(--pi-color-font-success)';
 }
 
 function formatDate(iso: string): string {
@@ -245,11 +241,11 @@ export class DetailsComponent extends IntegrationComponentBase {
     (b) => b.toString(16).padStart(2, '0')
   ).join('')}`;
 
-  private _originalExpandedState = new Map<string, boolean>();
+  private _originalExpandedState = new WeakMap<Element, boolean>();
 
   private _beforeCopy = async () => {
     this.shadowRoot?.querySelectorAll('pi-card').forEach((card: any) => {
-      this._originalExpandedState.set(card.getAttribute('card-title') ?? '', card.expanded);
+      this._originalExpandedState.set(card, card.expanded);
       card.expanded = true;
     });
     await this.updateComplete;
@@ -257,11 +253,11 @@ export class DetailsComponent extends IntegrationComponentBase {
 
   private _afterCopy = async () => {
     this.shadowRoot?.querySelectorAll('pi-card').forEach((card: any) => {
-      const title = card.getAttribute('card-title') ?? '';
-      const prev = this._originalExpandedState.get(title);
-      if (prev !== undefined) card.expanded = prev;
+      const original = this._originalExpandedState.get(card);
+      if (original !== undefined) {
+        card.expanded = original;
+      }
     });
-    this._originalExpandedState.clear();
   };
 
   // ── Computed helpers ────────────────────────────────────────────────────
@@ -339,9 +335,8 @@ export class DetailsComponent extends IntegrationComponentBase {
             ${svg`
               <circle
                 r="${radius}"
-                stroke="#eee"
+                style="stroke: var(--pi-color-border-element); fill: var(--pi-color-background-container-base)"
                 transform="rotate(-90)"
-                fill="#fff"
                 stroke-width="${strokeWidth}"
                 cx="0"
                 cy="0"
@@ -349,7 +344,7 @@ export class DetailsComponent extends IntegrationComponentBase {
               <circle
                 stroke-dasharray="${circumference}"
                 r="${radius}"
-                stroke="${color}"
+                style="stroke: ${color}"
                 transform="rotate(-90)"
                 fill="none"
                 stroke-dashoffset="${offset}"
@@ -361,7 +356,7 @@ export class DetailsComponent extends IntegrationComponentBase {
                 text-anchor="middle"
                 x="0"
                 y="5"
-                fill="${color}"
+                style="fill: ${color}"
                 font-size="13"
               >${score}</text>
             `}
@@ -555,7 +550,7 @@ export class DetailsComponent extends IntegrationComponentBase {
     const collections = this._collections;
 
     return html`
-      <div style="position: relative;">
+      <div>
         <div class="copy-btn-container">
           <pi-copy-button
             copy-content-id=${this._copyContentId}
