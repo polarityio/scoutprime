@@ -199,12 +199,13 @@ export class DetailsComponent extends IntegrationComponentBase {
       /* ── Association items ── */
       .association-info {
         margin-top: var(--pi-size-spacing-sm, 0.5rem);
-        padding-bottom: var(--pi-size-spacing-sm, 0.5rem);
-        border-bottom: 1px solid var(--pi-color-border-element, #efefef);
+        padding: var(--pi-size-spacing-sm, 0.5rem);
+        border: 1px solid var(--pi-color-border-container, #606470);
+        border-radius: var(--pi-size-radius-base, 4px);
       }
 
       .association-info:last-child {
-        border-bottom: none;
+        margin-bottom: 0;
       }
 
       .association-name {
@@ -388,13 +389,13 @@ export class DetailsComponent extends IntegrationComponentBase {
                 key="Classification"
                 value=${(a.right.classifications ?? []).join(', ')}
               ></pi-key-value>
-              ${a.meta.reports_s
+              ${a.meta?.reports_s
                 ? html`<pi-key-value key="Reports" value=${a.meta.reports_s}></pi-key-value>`
                 : nothing}
-              ${a.meta.targets_s
+              ${a.meta?.targets_s
                 ? html`<pi-key-value key="Targets" value=${a.meta.targets_s}></pi-key-value>`
                 : nothing}
-              ${a.meta.targetport_s
+              ${a.meta?.targetport_s
                 ? html`<pi-key-value key="Targetport" value=${a.meta.targetport_s}></pi-key-value>`
                 : nothing}
             </div>

@@ -2,7 +2,7 @@
 
 Search the Lookingglass scoutPRIME and display information including TIC Score, Sources, Collections, WHOIS, and Location data for IPv4 addresses and domains. 
 
-<img src="./images/overlay.png" width="50%">
+<img src="./docs/overlay.png" width="50%">
 
 ## scoutPRIME Integration Options
 

@@ -1,15 +1,15 @@
 {
   "main": "./dist/integration.js",
   "name": "scoutPRIME",
-  "version": "4.0.0",
+  "version": "4.0.1",
   "private": true,
   "dependencies": {
-    "polarity-integration-utils": "^4.3.0"
+    "polarity-integration-utils": "^4.3.2"
   },
   "devDependencies": {
     "@eslint/js": "^10.0.1",
-    "@polarityio/integration-types": "^2.0.0",
-    "@polarityio/pi-components": "^1.12.0",
+    "@polarityio/integration-types": "^3.1.0",
+    "@polarityio/pi-components": "^1.18.5",
     "@polarityio/vite-plugin-icl": "^1.0.2",
     "@vitest/browser": "^4.1.4",
     "@vitest/browser-playwright": "^4.1.4",
@@ -37,7 +37,9 @@
   },
   "overrides": {
     "postman-request": {
-      "qs": "^6.15.2"
+      ".": "2.88.1-postman.49",
+      "qs": "^6.15.2",
+      "uuid": "^11.1.1"
     }
   }
 }
