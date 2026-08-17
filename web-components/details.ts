@@ -549,6 +549,7 @@ export class DetailsComponent extends IntegrationComponentBase {
 
     const associations = this._associations;
     const collections = this._collections;
+    const lastActivityAt = this._lastActivityAt;
 
     return html`
       <div>
@@ -577,10 +578,10 @@ export class DetailsComponent extends IntegrationComponentBase {
                   ${collections.length === 1 ? 'Collection' : 'Collections'}
                 </div>
               </div>
-              ${associations.length > 0
+              ${lastActivityAt
                 ? html`
                     <div class="header-item">
-                      <div class="header-value">${relativeTime(this._lastActivityAt)}</div>
+                      <div class="header-value">${relativeTime(lastActivityAt)}</div>
                       <div class="header-key">Last Activity</div>
                     </div>
                   `
