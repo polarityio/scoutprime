@@ -13,8 +13,8 @@ interface AssociationResult {
     threatId: string;
     name: string;
   };
-  firstSeen: string;
-  lastSeen: string;
+  firstSeen: string | number;
+  lastSeen: string | number;
   meta: {
     reports_s?: string;
     targets_s?: string;
@@ -31,7 +31,7 @@ interface OwnerLocation {
   country: string;
   countryName: string;
   country2Digit: string;
-  lastSeen: string;
+  lastSeen: string | number;
 }
 
 interface OwnerCollection {
@@ -49,7 +49,7 @@ interface Owner {
   asns: number[];
   locations: OwnerLocation[];
   labels: string[];
-  lastActivityAt: string;
+  lastActivityAt: string | number;
   sources: string[];
   md5s: string[];
   sha1s: string[];
@@ -96,12 +96,12 @@ function getThreatColor(ticScore: number): string {
   return 'var(--pi-color-font-success)';
 }
 
-function formatDate(iso: string): string {
+function formatDate(iso: string | number): string {
   if (!iso) return '';
   return new Date(iso).toLocaleString();
 }
 
-function relativeTime(iso: string): string {
+function relativeTime(iso: string | number): string {
   if (!iso) return '';
   const now = Date.now();
   const then = new Date(iso).getTime();
@@ -283,17 +283,17 @@ export class DetailsComponent extends IntegrationComponentBase {
     return this._owners.reduce<OwnerCollection[]>((acc, o) => acc.concat(o.collections ?? []), []);
   }
 
-  private get _lastActivityAt(): string {
+  private get _lastActivityAt(): string | number {
     const results = this._associations;
     if (results.length === 0) return '';
 
-    let latestLastSeen = '';
+    let latestLastSeen: string | number = '';
     let latestTimestamp = Number.NEGATIVE_INFINITY;
 
     for (const result of results) {
       if (!result.lastSeen) continue;
 
-      const timestamp = Date.parse(result.lastSeen);
+      const timestamp = new Date(result.lastSeen).getTime();
       if (!Number.isNaN(timestamp) && timestamp > latestTimestamp) {
         latestTimestamp = timestamp;
         latestLastSeen = result.lastSeen;
@@ -583,6 +583,7 @@ export class DetailsComponent extends IntegrationComponentBase {
                     <div class="header-item">
                       <div class="header-value">${relativeTime(lastActivityAt)}</div>
                       <div class="header-key">Last Activity</div>
+                      <pi-tooltip>${formatDate(lastActivityAt)}</pi-tooltip>
                     </div>
                   `
                 : nothing}
