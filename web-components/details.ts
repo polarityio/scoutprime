@@ -13,8 +13,8 @@ interface AssociationResult {
     threatId: string;
     name: string;
   };
-  firstSeen: string;
-  lastSeen: string;
+  firstSeen: string | number;
+  lastSeen: string | number;
   meta: {
     reports_s?: string;
     targets_s?: string;
@@ -31,7 +31,7 @@ interface OwnerLocation {
   country: string;
   countryName: string;
   country2Digit: string;
-  lastSeen: string;
+  lastSeen: string | number;
 }
 
 interface OwnerCollection {
@@ -49,7 +49,7 @@ interface Owner {
   asns: number[];
   locations: OwnerLocation[];
   labels: string[];
-  lastActivityAt: string;
+  lastActivityAt: string | number;
   sources: string[];
   md5s: string[];
   sha1s: string[];
@@ -90,22 +90,18 @@ interface ScoutPrimeDetails {
 
 // ── Helpers ──────────────────────────────────────────────────────────────────
 
-const RED = '#fa5843';
-const YELLOW = '#ffc15d';
-const GREEN = '#7dd21b';
-
 function getThreatColor(ticScore: number): string {
-  if (ticScore >= 75) return RED;
-  if (ticScore >= 50) return YELLOW;
-  return GREEN;
+  if (ticScore >= 75) return 'var(--pi-color-font-danger)';
+  if (ticScore >= 50) return 'var(--pi-color-font-warning)';
+  return 'var(--pi-color-font-success)';
 }
 
-function formatDate(iso: string): string {
+function formatDate(iso: string | number): string {
   if (!iso) return '';
   return new Date(iso).toLocaleString();
 }
 
-function relativeTime(iso: string): string {
+function relativeTime(iso: string | number): string {
   if (!iso) return '';
   const now = Date.now();
   const then = new Date(iso).getTime();
@@ -203,12 +199,13 @@ export class DetailsComponent extends IntegrationComponentBase {
       /* ── Association items ── */
       .association-info {
         margin-top: var(--pi-size-spacing-sm, 0.5rem);
-        padding-bottom: var(--pi-size-spacing-sm, 0.5rem);
-        border-bottom: 1px solid var(--pi-color-border-element, #efefef);
+        padding: var(--pi-size-spacing-sm, 0.5rem);
+        border: 1px solid var(--pi-color-border-container, #606470);
+        border-radius: var(--pi-size-radius-base, 4px);
       }
 
       .association-info:last-child {
-        border-bottom: none;
+        margin-bottom: 0;
       }
 
       .association-name {
@@ -245,11 +242,11 @@ export class DetailsComponent extends IntegrationComponentBase {
     (b) => b.toString(16).padStart(2, '0')
   ).join('')}`;
 
-  private _originalExpandedState = new Map<string, boolean>();
+  private _originalExpandedState = new WeakMap<Element, boolean>();
 
   private _beforeCopy = async () => {
     this.shadowRoot?.querySelectorAll('pi-card').forEach((card: any) => {
-      this._originalExpandedState.set(card.getAttribute('card-title') ?? '', card.expanded);
+      this._originalExpandedState.set(card, card.expanded);
       card.expanded = true;
     });
     await this.updateComplete;
@@ -257,11 +254,11 @@ export class DetailsComponent extends IntegrationComponentBase {
 
   private _afterCopy = async () => {
     this.shadowRoot?.querySelectorAll('pi-card').forEach((card: any) => {
-      const title = card.getAttribute('card-title') ?? '';
-      const prev = this._originalExpandedState.get(title);
-      if (prev !== undefined) card.expanded = prev;
+      const original = this._originalExpandedState.get(card);
+      if (original !== undefined) {
+        card.expanded = original;
+      }
     });
-    this._originalExpandedState.clear();
   };
 
   // ── Computed helpers ────────────────────────────────────────────────────
@@ -286,17 +283,17 @@ export class DetailsComponent extends IntegrationComponentBase {
     return this._owners.reduce<OwnerCollection[]>((acc, o) => acc.concat(o.collections ?? []), []);
   }
 
-  private get _lastActivityAt(): string {
+  private get _lastActivityAt(): string | number {
     const results = this._associations;
     if (results.length === 0) return '';
 
-    let latestLastSeen = '';
+    let latestLastSeen: string | number = '';
     let latestTimestamp = Number.NEGATIVE_INFINITY;
 
     for (const result of results) {
       if (!result.lastSeen) continue;
 
-      const timestamp = Date.parse(result.lastSeen);
+      const timestamp = new Date(result.lastSeen).getTime();
       if (!Number.isNaN(timestamp) && timestamp > latestTimestamp) {
         latestTimestamp = timestamp;
         latestLastSeen = result.lastSeen;
@@ -339,9 +336,8 @@ export class DetailsComponent extends IntegrationComponentBase {
             ${svg`
               <circle
                 r="${radius}"
-                stroke="#eee"
+                style="stroke: var(--pi-color-border-element); fill: var(--pi-color-background-container-base)"
                 transform="rotate(-90)"
-                fill="#fff"
                 stroke-width="${strokeWidth}"
                 cx="0"
                 cy="0"
@@ -349,7 +345,7 @@ export class DetailsComponent extends IntegrationComponentBase {
               <circle
                 stroke-dasharray="${circumference}"
                 r="${radius}"
-                stroke="${color}"
+                style="stroke: ${color}"
                 transform="rotate(-90)"
                 fill="none"
                 stroke-dashoffset="${offset}"
@@ -361,7 +357,7 @@ export class DetailsComponent extends IntegrationComponentBase {
                 text-anchor="middle"
                 x="0"
                 y="5"
-                fill="${color}"
+                style="fill: ${color}"
                 font-size="13"
               >${score}</text>
             `}
@@ -393,13 +389,13 @@ export class DetailsComponent extends IntegrationComponentBase {
                 key="Classification"
                 value=${(a.right.classifications ?? []).join(', ')}
               ></pi-key-value>
-              ${a.meta.reports_s
+              ${a.meta?.reports_s
                 ? html`<pi-key-value key="Reports" value=${a.meta.reports_s}></pi-key-value>`
                 : nothing}
-              ${a.meta.targets_s
+              ${a.meta?.targets_s
                 ? html`<pi-key-value key="Targets" value=${a.meta.targets_s}></pi-key-value>`
                 : nothing}
-              ${a.meta.targetport_s
+              ${a.meta?.targetport_s
                 ? html`<pi-key-value key="Targetport" value=${a.meta.targetport_s}></pi-key-value>`
                 : nothing}
             </div>
@@ -553,9 +549,10 @@ export class DetailsComponent extends IntegrationComponentBase {
 
     const associations = this._associations;
     const collections = this._collections;
+    const lastActivityAt = this._lastActivityAt;
 
     return html`
-      <div style="position: relative;">
+      <div>
         <div class="copy-btn-container">
           <pi-copy-button
             copy-content-id=${this._copyContentId}
@@ -581,11 +578,12 @@ export class DetailsComponent extends IntegrationComponentBase {
                   ${collections.length === 1 ? 'Collection' : 'Collections'}
                 </div>
               </div>
-              ${associations.length > 0
+              ${lastActivityAt
                 ? html`
                     <div class="header-item">
-                      <div class="header-value">${relativeTime(this._lastActivityAt)}</div>
+                      <div class="header-value">${relativeTime(lastActivityAt)}</div>
                       <div class="header-key">Last Activity</div>
+                      <pi-tooltip>${formatDate(lastActivityAt)}</pi-tooltip>
                     </div>
                   `
                 : nothing}
