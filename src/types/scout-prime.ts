@@ -7,8 +7,8 @@ export interface AssociationResult {
     threatId: string;
     name: string;
   };
-  firstSeen: string;
-  lastSeen: string;
+  firstSeen: string | number;
+  lastSeen: string | number;
   meta: {
     reports_s?: string;
     targets_s?: string;
@@ -30,7 +30,7 @@ export interface OwnerLocation {
   country: string;
   countryName: string;
   country2Digit: string;
-  lastSeen: string;
+  lastSeen: string | number;
 }
 
 export interface OwnerCollection {
@@ -48,7 +48,7 @@ export interface Owner {
   asns: number[];
   locations: OwnerLocation[];
   labels: string[];
-  lastActivityAt: string;
+  lastActivityAt: string | number;
   sources: string[];
   md5s: string[];
   sha1s: string[];
